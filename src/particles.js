@@ -1,19 +1,31 @@
 //let partImg=document.getElementById("partMage");
 let partImg=new Image();
-partImg.src="/assets/mag4.png";
+partImg.src="/assets/mag5.png";
 
 let partMax=document.getElementById("partMax");
 
 export default class Particle {
-	constructor() {
+	constructor(game) {
+		this.game=game;
 		this.particleSystem = [];
-
 	}
 	
 	create(posX,posY){
 		for(var i=0;i<partMax.value;i++){
 			this.particleSystem.push(new miniParticle(posX,posY));
 		}
+	}
+	
+	start(){
+		this.particleSystem = [];
+	}
+	
+	finish(){
+		this.particleSystem.forEach(part => {
+			part.time=part.timeMax;
+			part.velX*=2;
+			part.velY*=2;
+		});
 	}
 	
 	update(deltaTime){
@@ -38,6 +50,7 @@ class miniParticle{
 		this.timeMax=1000;
 		this.time=this.timeMax;
 		this.img=partImg;
+		this.imgSize=32;
 		
 	}
 	
@@ -70,10 +83,10 @@ class miniParticle{
 			ctx.globalAlpha=this.alpha;
 			ctx.drawImage(
 			  this.img,
-			  this.posX-(partImg.width/2),
-			  this.posY-(partImg.height/2),
-			  (partImg.width/2)*this.time/this.timeMax,
-			  (partImg.height/2)*this.time/this.timeMax
+			  this.posX-this.imgSize/2,
+			  this.posY-this.imgSize/2,
+			  this.imgSize*this.time/this.timeMax,
+			  this.imgSize*this.time/this.timeMax
 			);
 			//ctx.restore();
 		}
