@@ -1,6 +1,6 @@
 //let partImg=document.getElementById("partMage");
 let partImg=new Image();
-partImg.src="/assets/mag3.png";
+partImg.src="/assets/mag4.png";
 
 let partMax=document.getElementById("partMax");
 
