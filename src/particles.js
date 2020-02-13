@@ -1,3 +1,8 @@
+import V from "/src/Vmath.js";
+
+let img=new Image();
+img.src="/assets/mag5.png";
+
 export default class Particle{
 	constructor(posX,posY){
 		this.posX=posX;
@@ -9,26 +14,15 @@ export default class Particle{
 		this.alpha=1;
 		this.timeMax=1000;
 		this.time=this.timeMax;
-		this.img=new Image();
-		this.img.src="/assets/mag5.png";
+		this.img=img;
 		this.imgSize=32;
-		
-	}
-	
-	normalize(pointX,pointY) {
-		var norm = Math.sqrt(pointX * pointX + pointY * pointY);
-		if (norm != 0) { // as3 return 0,0 for a point of zero length
-			pointX = pointX / norm;
-			pointY = pointY / norm;
-		}
-		return [pointX,pointY];
 	}
 	
 	update(deltaTime){
 		//console.log(this.posX);
 		this.posX+=this.velX;
 		this.posY+=this.velY;
-		var addition=this.normalize(this.gravitY-this.posY,this.gravitX-this.posX);
+		var addition=V.normalize(this.gravitY-this.posY,this.gravitX-this.posX);
 		this.velX+=addition[1]/2;
 		this.velY+=addition[0]/2;
 		this.time-=deltaTime;
