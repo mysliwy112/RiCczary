@@ -10,5 +10,15 @@ export default class V {
 	static len(pointX,pointY) {
 		return Math.sqrt(pointX * pointX + pointY * pointY);
 	}
+	static toNearest(num, numr){
+		num=Math.round(num/Math.PI*180)+180;
+		numr=Math.round(numr/Math.PI*180);
+		var how=num-num%numr;
+		
+		if(num%numr>numr/2){
+			how+=numr;
+		}
+		return (how-180)/180*Math.PI;
+	}
 }
 	

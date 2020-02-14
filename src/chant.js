@@ -1,4 +1,5 @@
 import Particle from "./particles.js";
+import {Spell,Effects} from "./spells.js";
 import V from "/src/Vmath.js";
 
 let partMax=document.getElementById("partMax");
@@ -22,7 +23,8 @@ export default class Chant {
 		
 		//actual spell and allowed spells
 		this.spell=0;
-		this.spellBook=0;
+		this.spellBook=[new Spell("sen",[-90,45,-45,90],[1,1,1,1],Effects.sen),new Spell("budyn",[180,90,0,90,180],[1,1,1,1,1],Effects.budyn)];
+		//console.log(this,spellBook)
 		
 		//spell symbol
 		this.lens=[];
@@ -37,6 +39,10 @@ export default class Chant {
 		this.difMin=0.7
 		this.checkBound=10
 		this.checkSize=3;
+		this.varianceCheck=0.009;
+		
+		//cretion
+		this.creationMode=false;
 		
 	}
 	
@@ -82,7 +88,7 @@ export default class Chant {
 				accu=accu/tans.length;
 				var variance=accu-(mean*mean);
 				
-				if(variance<0.009){
+				if(variance<this.varianceCheck){
 					mean=(mean*tans.length-tans[0])/(tans.length-1);
 					if(mean>Math.PI)
 						mean-=2*Math.PI;
@@ -132,6 +138,47 @@ export default class Chant {
 		}
 	}
 	
+	create(){
+		for(var i=0;i<this.dirs.length;i++){
+			this.dirs[i]=Math.round(V.toNearest(this.dirs[i],45/180*Math.PI)/Math.PI*180);
+			if(this.dirs[i]==-180)
+				this.dirs[i]=180;
+		}
+		var low=this.lens[0];
+		for(var i=1;i<this.lens.length;i++){
+			if(this.lens[i]<low)
+				low=this.lens[i];
+		}
+		for(var i=0;i<this.lens.length;i++){
+			this.lens[i]=Math.round(this.lens[i]/low);
+		}
+		document.getElementById("cSpellOut").value=document.getElementById("cSpellName").value+" "+JSON.stringify(this.dirs)+" "+JSON.stringify(this.lens);
+		this.creationMode=false;
+	}
+	compare(){
+		for(var i=0;i<this.dirs.length;i++){
+			this.dirs[i]=Math.round(V.toNearest(this.dirs[i],45/180*Math.PI)/Math.PI*180);
+			if(this.dirs[i]==-180)
+				this.dirs[i]=180;
+		}
+		var good=new Array(this.spellBook.length).fill(true);
+		for(var i=0;i<this.dirs.length;i++){
+			for(var j=0;j<good.length;j++){
+				if(good[j]){
+					if(this.dirs.length>this.spellBook[j].seq.length||this.dirs[i]!=this.spellBook[j].seq[i])
+						good[j]=false;
+				}
+			}
+		}
+		for(var j=0;j<good.length;j++){
+			if(good[j]){
+				this.spellBook[j].effect();
+				//cast(this.spellBook[j]);
+				break;
+			}
+		}
+	}
+	
 	reset(){
 		this.particleSystem = [];
 		this.lens=[];
@@ -157,6 +204,11 @@ export default class Chant {
 			part.velY*=2;
 		});
 		this.lens.push(V.len(this.posX-this.lastX,this.posY-this.lastY));
+		if(this.creationMode)
+			this.create();
+		else
+			this.compare();
+		
 	}
 
 	update(deltaTime){
@@ -164,26 +216,43 @@ export default class Chant {
 		this.particleSystem.forEach(part => part.update(deltaTime));
 	}
 	draw(){
-		var c=this.canvas.getContext("2d");
-		c.beginPath();
-		c.moveTo(this.posX,this.posY);
-		var v=V.normalize(Math.cos(this.mean),Math.sin(this.mean));
-		c.lineTo(this.posX+v[0]*200,this.posY+v[1]*200);
-		c.stroke();
-		
-		c.beginPath();
-		c.arc(this.lastX,this.lastY,30,0,2*Math.PI);
-		c.fillStyle = "black";
-		c.fill();
-		
-		for(var i=0;i<this.points.length;i++){
-			c.beginPath();
-			c.arc(this.points[i][0],this.points[i][1],10,0,2*Math.PI);
-			c.fillStyle = "red";
-			c.fill();
+		var ctx=this.canvas.getContext("2d");
+		if(document.getElementById("DBG").checked){
+			ctx.beginPath();
+			ctx.moveTo(this.posX,this.posY);
+			//var v=V.normalize(Math.cos(this.mean),Math.sin(this.mean));
+			var v=V.normalize(Math.cos(this.mean),Math.sin(this.mean));
+			ctx.lineTo(this.posX+v[0]*200,this.posY+v[1]*200);
+			ctx.stroke();
+			
+			ctx.beginPath();
+			ctx.arc(this.lastX,this.lastY,30,0,2*Math.PI);
+			ctx.fillStyle = "black";
+			ctx.fill();
+			
+			for(var i=0;i<this.points.length;i++){
+				ctx.beginPath();
+				ctx.arc(this.points[i][0],this.points[i][1],10,0,2*Math.PI);
+				ctx.fillStyle = "red";
+				ctx.fill();
+			}
+		}
+		if(this.creationMode){
+			ctx.beginPath();
+			var posX=this.canvas.width/2;
+			var posY=this.canvas.height/2;
+			ctx.moveTo(posX,posY);
+			for(var i=0;i<this.lens.length;i++){
+				var v=V.normalize(Math.cos(V.toNearest(this.dirs[i],45/180*Math.PI)),Math.sin(V.toNearest(this.dirs[i],45/180*Math.PI)));
+				//console.log(V.toNearest(this.dirs[i],45/180*Math.PI));
+				posX=posX+v[0]*this.lens[i]/5;
+				posY=posY+v[1]*this.lens[i]/5;
+				ctx.lineTo(posX,posY);
+			}
+			ctx.stroke();
 		}
 		
-		this.particleSystem.forEach(part => part.draw(this.canvas.getContext("2d")));
+		this.particleSystem.forEach(part => part.draw(ctx));
 	}
 	
 }

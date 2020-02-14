@@ -1,10 +1,11 @@
 import Player from "./player.js";
 import * as Ctr from "./controller.js";
+import Menu from "./menu.js";
 
 export default class Game {
 	constructor(canvas) {
 		this.canvas=canvas;
-		this.work=false;
+		Menu.start();
 		this.mainPlayer=new Player(canvas);
 		this.controller=new Ctr.Mouser(this.mainPlayer);
 		this.controller.start(canvas);

@@ -3,6 +3,7 @@
 <head>
 	<title>"THE MAGE"</title>
 	<meta charset="UTF-8" />
+
 	<style>
 		#gameScreen {
 			border: 1px solid black;
@@ -16,7 +17,18 @@
 
 	<canvas id="gameScreen" width="800" height="600"></canvas>
 	<input type="range" min="1" max="20" value="10" id="partMax">
+	
+	<input id="DBG" type="checkbox">Debug</button>
 	<script src="src/index.js" type="module"></script>
+	<div id="debugMenu" style="display:none">
+		<div id="cSpellMenu">
+			<button id="cSpellShape" type="button">Create spell</button>
+			<input id="cSpellName" type="text">Spell name</input>
+			<input id="cSpellOut" type="text">Spell shape</input>
+		</div>
+	</div>
+	
+	
 	
 </body>
 

@@ -5,6 +5,10 @@ let ctx = canvas.getContext("2d");
 
 let game = new Game(canvas);
 
+
+
+
+
 let lastTime = 0;
 function gameLoop(timestamp) {
   let deltaTime = timestamp - lastTime;
