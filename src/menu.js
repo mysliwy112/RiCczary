@@ -1,5 +1,3 @@
-
-
 export default class Menu {
 	constructor(canvas,maskScreen){
 		document.getElementById("DBG").addEventListener("input", event =>{
@@ -9,8 +7,7 @@ export default class Menu {
 				document.getElementById("debugMenu").style.display="none"
 			}
 		});
-		this.enemyMenu=new EnemyMenu();
-		this.enemyMenu.set(canvas,maskScreen);
+		this.enemyMenu=new EnemyMenu(canvas,maskScreen);
 	}
 	
 	enemyChoose(){
@@ -31,10 +28,8 @@ export default class Menu {
 }
 class Windows{}
 
-class EnemyMenu extends Windows{
-	
-	
-	set(canvas,maskScreen){
+class EnemyMenu{
+	constructor(canvas,maskScreen){
 		this.ok=0;
 		var that=this;
 		this.loadWait=0;
@@ -61,6 +56,8 @@ class EnemyMenu extends Windows{
 	
 	update(deltaTime){
 		if(this.loadWait==2&&this.ok==0){
+			this.playAi=this.playAi.bind(this);
+			this.playPlayer=this.playPlayer.bind(this);
 			this.vsAiM=this.maskScreen.addObject(this.vsAi,this.playAi);
 			this.vsPlayerM=this.maskScreen.addObject(this.vsPlayer,this.playPlayer);
 			this.ok=1;
@@ -90,10 +87,11 @@ class EnemyMenu extends Windows{
 				this.vsPlayerY
 			);
 		}
-	}
-	
+	}		
+
 	playAi(){
 		console.log("Ai is waiting for you");
+		console.log(this.vsPlayerX);
 	}
 	
 	playPlayer(){
