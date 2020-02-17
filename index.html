@@ -7,6 +7,24 @@
 	<style>
 		#gameScreen {
 			border: 1px solid black;
+			position: absolute; 
+			left: 10; 
+			top: 10; 
+			z-index: 0;
+		}
+		#maskScreen {
+			border: 1px solid black;
+			position: absolute; 
+			left: 10; 
+			top: 10; 
+			z-index: 0;
+			opacity: 0;
+			<!-- pointer-events: none -->
+		}
+		#dummy{
+			height: 610px;
+			width: 810px;
+			<!-- background-color: #555; -->
 		}
 	</style>
 	
@@ -14,8 +32,11 @@
 
 <body>	
 	<!-- <img id="partMage" style="opacity:0.5" src="assets/mag.png"> -->
-
-	<canvas id="gameScreen" width="800" height="600"></canvas>
+	<div>
+		<canvas id="gameScreen" width="800" height="600"></canvas>
+		<canvas id="maskScreen" width="800" height="600"></canvas>
+		<div id="dummy"></canvas>
+	</div>
 	<input type="range" min="1" max="20" value="10" id="partMax">
 	
 	<input id="DBG" type="checkbox">Debug</button>

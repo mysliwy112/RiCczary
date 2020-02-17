@@ -23,7 +23,14 @@ export default class Chant {
 		
 		//actual spell and allowed spells
 		this.spell=0;
-		this.spellBook=[new Spell("sen",[-90,45,-45,90],[1,1,1,1],Effects.sen),new Spell("budyn",[180,90,0,90,180],[1,1,1,1,1],Effects.budyn)];
+		this.spellBook=[
+			new Spell("sen",[-90,45,-45,90],[1,1,1,1],Effects.sen),
+			new Spell("budyn",[180,90,0,90,180],[1,1,1,1,1],Effects.budyn),
+			new Spell("zaba",[90,0,-90,180,45,180],[1,1,1,1,1,1],Effects.zaba),
+			new Spell("ciemnosc",[0,-135,-45,180],[1,1,1,1],Effects.ciemnosc),
+			new Spell("muchy",[90,-135,0,-135],[2,1,2,1],Effects.muchy),
+			new Spell("wiry",[-90,45,-90,135,0],[1,2,1,2,1],Effects.wiry)
+		];
 		//console.log(this,spellBook)
 		
 		//spell symbol
@@ -152,7 +159,7 @@ export default class Chant {
 		for(var i=0;i<this.lens.length;i++){
 			this.lens[i]=Math.round(this.lens[i]/low);
 		}
-		document.getElementById("cSpellOut").value=document.getElementById("cSpellName").value+" "+JSON.stringify(this.dirs)+" "+JSON.stringify(this.lens);
+		document.getElementById("cSpellOut").value="new Spell(\""+document.getElementById("cSpellName").value+"\","+JSON.stringify(this.dirs)+","+JSON.stringify(this.lens)+",Effects."+document.getElementById("cSpellName").value;
 		this.creationMode=false;
 	}
 	compare(){
@@ -165,7 +172,7 @@ export default class Chant {
 		for(var i=0;i<this.dirs.length;i++){
 			for(var j=0;j<good.length;j++){
 				if(good[j]){
-					if(this.dirs.length>this.spellBook[j].seq.length||this.dirs[i]!=this.spellBook[j].seq[i])
+					if(this.dirs.length!=this.spellBook[j].seq.length||this.dirs[i]!=this.spellBook[j].seq[i])
 						good[j]=false;
 				}
 			}

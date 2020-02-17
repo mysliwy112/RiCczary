@@ -26,10 +26,6 @@ export class Mouser extends Controller{
 			this.player.chant.reset();
 			this.work=false;
 		});
-		canavas.addEventListener("mouseleave", event =>{
-			this.player.chant.reset();
-			this.work=false;
-		});
 		document.getElementById("cSpellShape").addEventListener("click", event =>{
 			this.player.chant.reset();
 			this.player.chant.creationMode=true;

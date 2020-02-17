@@ -20,6 +20,10 @@ export class Effects{
 		console.log("budyn");
 	}
 	
+	static zaba(){
+		console.log("zaba");
+	}
+	
 	constructor(){
 		this.dic={
 			"sen":this.sen,

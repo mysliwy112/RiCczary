@@ -3,7 +3,10 @@ import Game from "/src/game.js";
 let canvas = document.getElementById("gameScreen");
 let ctx = canvas.getContext("2d");
 
-let game = new Game(canvas);
+let canvasM = document.getElementById("maskScreen");
+let ctxM = canvasM.getContext("2d");
+
+let game = new Game(canvas,canvasM);
 
 
 
@@ -16,8 +19,9 @@ function gameLoop(timestamp) {
   //console.log(deltaTime);
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //ctxM.clearRect(0, 0, canvasM.width, canvasM.height);
   game.update(deltaTime);
-  game.draw(ctx);
+  game.draw(ctx,ctxM);
 
   requestAnimationFrame(gameLoop);
 }
