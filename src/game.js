@@ -7,7 +7,7 @@ export default class Game {
 	constructor(canvas,canvasM) {
 		this.canvas=canvas;
 		this.maskScreen=new MaskScreen(canvasM);
-		this.menu=new Menu(canvas,this.maskScreen);
+		this.menu=new Menu(canvas,this.maskScreen,this);
 		this.menu.enemyChoose();
 		this.mainPlayer=new Player(canvas);
 		
@@ -25,5 +25,9 @@ export default class Game {
 	draw(ctx,ctxM){
 		this.mainPlayer.draw(ctx,ctxM);
 		this.menu.draw(ctx,ctxM);
+	}
+
+	startgame(AI){
+		console.log(AI);
 	}
 }

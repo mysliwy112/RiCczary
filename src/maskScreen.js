@@ -36,12 +36,6 @@ export default class MaskScreen{
 		this.rgb++;
 		return cnv;
 	}
-	
-	// hit(event,this){
-		// var imageData = this.canvas.getContext("2d").getImageData(event.offsetX, event.offsetY, 1, 1);
-		// var data = imageData.data;
-		// this.objects[data[i]+data[i]*256+data[i]*65536][1];
-		
-	// }
+
 	
 }

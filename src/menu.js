@@ -1,5 +1,5 @@
 export default class Menu {
-	constructor(canvas,maskScreen){
+	constructor(canvas,maskScreen,game){
 		document.getElementById("DBG").addEventListener("input", event =>{
 			if(event.target.checked==true){
 				document.getElementById("debugMenu").style.display="block"
@@ -7,7 +7,7 @@ export default class Menu {
 				document.getElementById("debugMenu").style.display="none"
 			}
 		});
-		this.enemyMenu=new EnemyMenu(canvas,maskScreen);
+		this.enemyMenu=new EnemyMenu(canvas,maskScreen,game);
 	}
 	
 	enemyChoose(){
@@ -29,7 +29,8 @@ export default class Menu {
 class Windows{}
 
 class EnemyMenu{
-	constructor(canvas,maskScreen){
+	constructor(canvas,maskScreen,game){
+		this.game=game;
 		this.ok=0;
 		var that=this;
 		this.loadWait=0;
@@ -91,10 +92,12 @@ class EnemyMenu{
 
 	playAi(){
 		console.log("Ai is waiting for you");
-		console.log(this.vsPlayerX);
+		this.game.startgame(1);
 	}
 	
 	playPlayer(){
 		console.log("Get ready for C");
+		this.game.startgame(0);
+
 	}
 }
