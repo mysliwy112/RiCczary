@@ -1,12 +1,12 @@
 import Particle from "./particles.js";
-import {Spell,Effects} from "./spells.js";
 import V from "/src/Vmath.js";
 
 let partMax=document.getElementById("partMax");
 
 export default class Chant {
-	constructor(canvas) {
-		
+	constructor(player,canvas,transform=null) {
+		this.player=player;
+		this.transform=transform;
 		//last position for length checking
 		this.lastX;
 		this.lastY;
@@ -23,19 +23,17 @@ export default class Chant {
 		
 		//actual spell and allowed spells
 		this.spell=0;
-		this.spellBook=[
-			new Spell("sen",[-90,45,-45,90],[1,1,1,1],Effects.sen),
-			new Spell("budyn",[180,90,0,90,180],[1,1,1,1,1],Effects.budyn),
-			new Spell("zaba",[90,0,-90,180,45,180],[1,1,1,1,1,1],Effects.zaba),
-			new Spell("ciemnosc",[0,-135,-45,180],[1,1,1,1],Effects.ciemnosc),
-			new Spell("muchy",[90,-135,0,-135],[2,1,2,1],Effects.muchy),
-			new Spell("wiry",[-90,45,-90,135,0],[1,2,1,2,1],Effects.wiry)
-		];
-		//console.log(this,spellBook)
+		//console.log(this,player.spellBook)
 		
 		//spell symbol
 		this.lens=[];
 		this.dirs=[];
+		
+		//settings
+		this.partSize=30;
+		this.partPow=8;
+		this.burstPow=2;
+		this.partMax=3;
 		
 		//for checking angles and lengths
 		this.tans=[];
@@ -55,13 +53,19 @@ export default class Chant {
 	
 	move(mouseX,mouseY){
 		this.check(mouseX,mouseY);
+		var a=[];
+		if(this.transform!=null){
+			a=this.transform(mouseX,mouseY)
+			mouseX=a[0];
+			mouseY=a[1];
+		}
 		var vX=mouseX-this.posX;
 		var vY=mouseY-this.posY;
 		var len=V.len(vX,vY);
 		var i=0;
 		for(var i=0;i<len;i+=this.freqPart){
-			for(var j=0;j<partMax.value;j++){
-				this.particleSystem.push(new Particle(this.posX+vX*i/len,this.posY+vY*i/len));
+			for(var j=0;j<this.partMax;j++){
+				this.particleSystem.push(new Particle(this.posX+vX*i/len,this.posY+vY*i/len,this.partSize,this.partPow));
 			}
 		}
 		this.posX=mouseX;
@@ -162,32 +166,34 @@ export default class Chant {
 		document.getElementById("cSpellOut").value="new Spell(\""+document.getElementById("cSpellName").value+"\","+JSON.stringify(this.dirs)+","+JSON.stringify(this.lens)+",Effects."+document.getElementById("cSpellName").value;
 		this.creationMode=false;
 	}
+	
 	compare(){
 		for(var i=0;i<this.dirs.length;i++){
 			this.dirs[i]=Math.round(V.toNearest(this.dirs[i],45/180*Math.PI)/Math.PI*180);
 			if(this.dirs[i]==-180)
 				this.dirs[i]=180;
 		}
-		var good=new Array(this.spellBook.length).fill(true);
+		
+		var good=new Array(this.player.spellBook.length).fill(true);
 		for(var i=0;i<this.dirs.length;i++){
 			for(var j=0;j<good.length;j++){
 				if(good[j]){
-					if(this.dirs.length!=this.spellBook[j].seq.length||this.dirs[i]!=this.spellBook[j].seq[i])
+					if(this.dirs.length!=this.player.spellBook[j].seq.length||this.dirs[i]!=this.player.spellBook[j].seq[i])
 						good[j]=false;
 				}
 			}
 		}
+
 		for(var j=0;j<good.length;j++){
 			if(good[j]){
-				this.spellBook[j].effect();
-				//cast(this.spellBook[j]);
+				this.player.cast(this.player.spellBook[j]);
 				break;
 			}
 		}
 	}
 	
 	reset(){
-		this.particleSystem = [];
+		
 		this.lens=[];
 		this.dirs=[];
 		this.tans=[];
@@ -196,34 +202,46 @@ export default class Chant {
 	
 	start(mouseX,mouseY){
 		this.reset();
-		this.posX=mouseX;
-		this.posY=mouseY;
+		
+		this.particleSystem = [];
+		
 		this.lastX=mouseX;
 		this.lastY=mouseY;
 		this.checkX=mouseY;
 		this.checkY=mouseY;
+		var a=[];
+		if(this.transform!=null){
+			a=this.transform(mouseX,mouseY)
+			mouseX=a[0];
+			mouseY=a[1];
+		}
+		this.posX=mouseX;
+		this.posY=mouseY;
 	}
 	
 	finish(){
 		this.particleSystem.forEach(part => {
 			part.time=part.timeMax;
-			part.velX*=2;
-			part.velY*=2;
+			part.velX*=this.burstPow;
+			part.velY*=this.burstPow;
 		});
 		this.lens.push(V.len(this.posX-this.lastX,this.posY-this.lastY));
-		if(this.creationMode)
-			this.create();
-		else
-			this.compare();
 		
+		if(this.dirs.length>0&&this.dirs.length==this.lens.length){
+			if(this.creationMode)
+				this.create();
+			else
+				this.compare();
+		}
+		this.reset();
 	}
 
 	update(deltaTime){
 		//console.log(this.dirs.length);
 		this.particleSystem.forEach(part => part.update(deltaTime));
 	}
-	draw(){
-		var ctx=this.canvas.getContext("2d");
+	draw(ctx,ctxM){
+		//var ctx=this.canvas.getContext("2d");
 		if(document.getElementById("DBG").checked){
 			ctx.beginPath();
 			ctx.moveTo(this.posX,this.posY);

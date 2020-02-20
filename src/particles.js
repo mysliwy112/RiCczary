@@ -4,18 +4,18 @@ let img=new Image();
 img.src="/assets/mag5.png";
 
 export default class Particle{
-	constructor(posX,posY){
+	constructor(posX,posY,size=20,initialPower=8){
 		this.posX=posX;
 		this.posY=posY;
-		this.velX=(Math.random()-0.5)*8;
-		this.velY=(Math.random()-0.5)*8;
+		this.velX=(Math.random()-0.5)*initialPower;
+		this.velY=(Math.random()-0.5)*initialPower;
 		this.gravitX=posX;
 		this.gravitY=posY;
 		this.alpha=1;
 		this.timeMax=1000;
 		this.time=this.timeMax;
 		this.img=img;
-		this.imgSize=32;
+		this.imgSize=size;
 	}
 	
 	update(deltaTime){
@@ -43,6 +43,7 @@ export default class Particle{
 			  this.imgSize*this.time/this.timeMax,
 			  this.imgSize*this.time/this.timeMax
 			);
+			ctx.globalAlpha=1;
 			//ctx.restore();
 		}
 	}

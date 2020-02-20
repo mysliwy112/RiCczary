@@ -1,16 +1,27 @@
 export default class MaskScreen{
 	constructor(canvas){
 		var that=this;
-		canvas.addEventListener("click",  event =>{
+		this.objects={};
+		this.rgb=1;
+		this.canvas=canvas;
+		this.globalFunc=null;
+		this.objects[0]=[null,null];
+		
+		
+		canvas.addEventListener("mousedown",  event =>{
 			var imageData = that.canvas.getContext("2d").getImageData(event.offsetX, event.offsetY, 1, 1);
 			var data = imageData.data;
 			
 			if(data[3]>0)
 				that.objects[data[0]+data[1]*256+data[2]*65536][1]();
+			else if(this.objects[0][1]!=null)
+				this.objects[0][1]();
 		});
-		this.objects={};
-		this.rgb=1;
-		this.canvas=canvas;
+
+	}
+	
+	addNull(func){
+		this.objects[0][1]=func;
 	}
 	
 	addObject(img,func){

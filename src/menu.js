@@ -91,13 +91,10 @@ class EnemyMenu{
 	}		
 
 	playAi(){
-		console.log("Ai is waiting for you");
 		this.game.startgame(1);
 	}
 	
 	playPlayer(){
-		console.log("Get ready for C");
 		this.game.startgame(0);
-
 	}
 }

@@ -12,6 +12,7 @@
 			top: 10; 
 			z-index: 0;
 		}
+		
 		#maskScreen {
 			border: 1px solid black;
 			position: absolute; 
@@ -19,12 +20,38 @@
 			top: 10; 
 			z-index: 0;
 			opacity: 0;
-			<!-- pointer-events: none -->
+		}
+		
+		#charChoose{
+			width: 50%;
+			
+		}
+		.row{
+			width: 100%;
+		}
+
+		#charImage{
+			<!-- margin-left: 50%; -->
+		}
+		#charName{
+			<!-- margin-left: 50%; -->
+		}
+		
+		.charButt{
+			margin-top: auto;
+			margin-bottom: auto;
+			
+		}
+		#char{
+			<!-- max-width: 1000px; -->
+			<!-- overflow: auto !important; -->
 		}
 		#dummy{
+			float: left;
+			width: 50%;
 			height: 610px;
 			width: 810px;
-			<!-- background-color: #555; -->
+			background-color: #555;
 		}
 	</style>
 	
@@ -32,15 +59,30 @@
 
 <body>	
 	<!-- <img id="partMage" style="opacity:0.5" src="assets/mag.png"> -->
-	<div>
-		<canvas id="gameScreen" width="800" height="600"></canvas>
-		<canvas id="maskScreen" width="800" height="600"></canvas>
-		<div id="dummy"></canvas>
+	<div class="row">
+		<div>
+			<!-- <canvas id="enemyScreen" width="800" height="600"></canvas> -->
+			<canvas id="gameScreen" width="800" height="600"></canvas>
+			<canvas id="maskScreen" width="800" height="600"></canvas>
+			<div id="dummy"></div>
+		</div>
+		
+		<div id="charChoose">
+			<button class="charButt" id="leftButt">&lt;</button>
+			<div id="char">
+				<input id="charName">Name</input>
+				<img id="charImage" src="/assets/avi1.png">
+			</div>
+			<button class="charButt" id="rightButt">&gt;</button>
+		</div>
 	</div>
+	
 	<input type="range" min="1" max="20" value="10" id="partMax">
 	
-	<input id="DBG" type="checkbox">Debug</button>
+	<input id="DBG" type="checkbox">Debug</input>
 	<script src="src/index.js" type="module"></script>
+
+	
 	<div id="debugMenu" style="display:none">
 		<div id="cSpellMenu">
 			<button id="cSpellShape" type="button">Create spell</button>

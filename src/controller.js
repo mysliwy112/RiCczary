@@ -1,14 +1,16 @@
 import Player from "./player.js";
 
 export class Controller{
-	constructor(player){
+	constructor(player,game){
 		this.player=player;
 		this.work=false;
+		this.game=game;
 	}
 }
 
 export class Mouser extends Controller{
 	start(canavas){
+		
 		canavas.addEventListener("mousemove", event =>{
 			if(this.work==true){
 				this.player.chant.move(event.offsetX,event.offsetY)
@@ -19,6 +21,7 @@ export class Mouser extends Controller{
 			this.work=true;
 		});
 		canavas.addEventListener("mouseup", event =>{
+			this.player.endSpell();
 			this.player.chant.finish();
 			this.work=false;
 		});
@@ -36,5 +39,4 @@ export class Mouser extends Controller{
 		this.player.chant.finish();
 		this.work=false;
 	}
-
 }

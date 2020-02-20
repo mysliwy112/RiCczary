@@ -1,5 +1,6 @@
 import Game from "/src/game.js";
 
+//let canvas = document.getElementById("gameScreen");
 let canvas = document.getElementById("gameScreen");
 let ctx = canvas.getContext("2d");
 
@@ -19,7 +20,7 @@ function gameLoop(timestamp) {
   //console.log(deltaTime);
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  //ctxM.clearRect(0, 0, canvasM.width, canvasM.height);
+  ctxM.clearRect(0, 0, canvasM.width, canvasM.height);
   game.update(deltaTime);
   game.draw(ctx,ctxM);
 
