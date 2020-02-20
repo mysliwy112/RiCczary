@@ -30,8 +30,7 @@ export default class Player {
 	}
 	update(deltaTime){
 		if(this.isLoading==1){
-			this.loadTime+=10/deltaTime;
-			console.log(this.loadTime);
+			this.loadTime+=0.1*deltaTime;
 		}
 		if(this.loadTime>=this.loadTimeMax){
 			this.isLoading=0;
@@ -39,6 +38,7 @@ export default class Player {
 			console.log("activated");
 		}
 		this.chant.update(deltaTime);
+		this.avatar.update(deltaTime);
 	}
 	draw(ctx,ctxM){
 		this.avatar.draw(ctx,ctxM);
@@ -58,7 +58,7 @@ export default class Player {
 		this.loadTime=0;
 		this.activeSpell=null;
 		this.isLoading=0;
-		console.log("broke");
+		//console.log("broke");
 	}
 	attack(enemy){
 		if(this.isLoading==0 && this.activeSpell!=null){

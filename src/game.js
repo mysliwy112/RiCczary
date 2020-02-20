@@ -34,7 +34,7 @@ export default class Game {
 	}
 
 	startgame(AI){
-		this.mainPlayer=new Player(this.canvas,new Av.Protag(document.getElementById("charImage")));
+		this.mainPlayer=new Player(this.canvas,new Av.Protag(this.menu.chars[this.menu.nowChar]));
 		var enemyMage=new Image();
 		enemyMage.src="/assets/drob.png";
 		var that=this;

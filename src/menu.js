@@ -1,3 +1,5 @@
+import Character from "/src/chars.js";
+
 export default class Menu {
 	constructor(canvas,maskScreen,game){
 		document.getElementById("DBG").addEventListener("input", event =>{
@@ -7,7 +9,34 @@ export default class Menu {
 				document.getElementById("debugMenu").style.display="none"
 			}
 		});
+		this.nowChar=0;
+		this.chars=[
+			new Character("/assets/rex.png",600,100,6,210),
+			new Character("/assets/drob.png",600,100,36,122),
+			new Character("/assets/mumion.png",600,100,11,108)
+		];
+		document.getElementById("leftButt").addEventListener("click", event =>{
+			this.nowChar--;
+			if(this.nowChar<0){
+				this.nowChar=this.chars.length-1;
+			}
+			this.setCharImg();
+			
+			
+		});
+		document.getElementById("rightButt").addEventListener("click", event =>{
+			this.nowChar++;
+			if(this.nowChar>=this.chars.length){
+				this.nowChar=0;
+			}
+			this.setCharImg();
+		});
+		
 		this.enemyMenu=new EnemyMenu(canvas,maskScreen,game);
+	}
+	
+	setCharImg(){
+		document.getElementById("charImage").src=this.chars[this.nowChar].img.src;
 	}
 	
 	enemyChoose(){

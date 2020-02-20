@@ -12,6 +12,10 @@ export default class MaskScreen{
 			var imageData = that.canvas.getContext("2d").getImageData(event.offsetX, event.offsetY, 1, 1);
 			var data = imageData.data;
 			
+			if(document.getElementById("DBG").checkeds){
+				console.log(event.offsetX+","+event.offsetY);
+			}
+			
 			if(data[3]>0)
 				that.objects[data[0]+data[1]*256+data[2]*65536][1]();
 			else if(this.objects[0][1]!=null)
