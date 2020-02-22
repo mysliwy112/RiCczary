@@ -21,6 +21,9 @@ export default class Chant {
 		this.particleSystem = [];
 		this.canvas=canvas;
 		
+		this.endGravX=0;
+		this.endGravY=0;
+		
 		//actual spell and allowed spells
 		this.spell=0;
 		//console.log(this,player.spellBook)
@@ -187,9 +190,10 @@ export default class Chant {
 		for(var j=0;j<good.length;j++){
 			if(good[j]){
 				this.player.cast(this.player.spellBook[j]);
-				break;
+				return 1;
 			}
 		}
+		return 0;
 	}
 	
 	reset(){
@@ -231,13 +235,36 @@ export default class Chant {
 			if(this.creationMode)
 				this.create();
 			else
-				this.compare();
+				if(this.compare()){
+					var a=this.player.loadTimeMax;
+					this.particleSystem.forEach(part =>{
+						part.timeMax=a;
+						part.time=part.timeMax+111;
+						part.gravitX=this.endGravX;
+						part.gravitY=this.endGravY;
+						part.loss=0.98;
+						
+					});
+				}
+		}else{
+			this.particleSystem = [];
 		}
 		this.reset();
 	}
-
+	
+	charged(){
+		this.particleSystem.forEach(part =>{
+			part.timeMax=10000;
+			part.time=part.timeMax;
+			part.velX*=this.burstPow;
+			part.velY*=this.burstPow;
+			part.loss=0.999;
+						
+		});
+	}
+	
 	update(deltaTime){
-		//console.log(this.dirs.length);
+		
 		this.particleSystem.forEach(part => part.update(deltaTime));
 	}
 	draw(ctx,ctxM){

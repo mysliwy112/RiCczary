@@ -1,4 +1,5 @@
 import V from "/src/Vmath.js";
+import Character from "/src/chars.js";
 
 export class Enemy{
 	constructor(img,maskScreen,from){
@@ -8,7 +9,9 @@ export class Enemy{
 		this.imgM=this.maskScreen.addObject(img,this.hit);
 		this.posX=100;
 		this.posY=100;
-		this.timeMax=1000;
+		this.velX=0;
+		this.velY=0;
+		this.timeMax=1200;
 		this.timeMin=500;
 		this.speed=0.1;
 		this.time=0;
@@ -33,21 +36,35 @@ export class Enemy{
 	
 	update(deltaTime){
 		if(this.time<=0){
+			
 			this.gravityX=(Math.random()-0.5)*100;
-			if(this.gravityX+this.posX>200||this.gravityX+this.posX<50)
-				this.gravityX=this.gravityX*-1;
+			if(this.posX>170){
+				if(this.gravityX>0)
+					this.gravityX=this.gravityX*-1;
+			}else if(this.gravityX+this.posX<130){
+				if(this.gravityX<0)
+					this.gravityX=this.gravityX*-1;
+			}
 			
 			this.gravityY=(Math.random()-0.5)*100;
-			if(this.gravityY+this.posY>300||this.gravityY+this.posY<50)
-				this.gravityY=this.gravityY*-1;
-			
+			if(this.posY>200){
+				if(this.gravityY>0)
+					this.gravityY=this.gravityY*-1;
+			}else if(this.gravityY+this.posY<100){
+				if(this.gravityY<0)
+					this.gravityY=this.gravityY*-1;
+			}
+
 			var a=V.normalize(this.gravityX,this.gravityY);
 			this.gravityX=a[0];
 			this.gravityY=a[1];
 			this.time=Math.random()*(this.timeMax-this.timeMin)+this.timeMin;
 		}else{
-			this.posX+=this.gravityX*this.speed*deltaTime;
-			this.posY+=this.gravityY*this.speed*deltaTime;
+			var a=V.normalize((this.gravityX-this.velX),(this.gravityY-this.velY));
+			this.velX+=a[0];
+			this.velY+=a[1];
+			this.posX+=this.velX*this.speed*deltaTime;
+			this.posY+=this.velY*this.speed*deltaTime;
 			this.time-=deltaTime;
 		}
 
@@ -78,6 +95,8 @@ export class Protag{
 	
 	set(player){
 		this.player=player;
+		this.player.chant.endGravX=this.charImg.rPosX+this.charImg.posX;
+		this.player.chant.endGravY=this.charImg.rPosY+this.charImg.posY;
 	}
 	update(){
 		

@@ -13,8 +13,10 @@ export default class Player {
 		
 		this.activeSpell=null;
 		this.isLoading=0;
-		this.loadTimeMax=100;
+		this.loadTimeMax=4000;
 		this.loadTime=0;
+		this.dischargeTimeMax=10000;
+		
 		
 		this.endSpell=this.endSpell.bind(this);
 		
@@ -29,14 +31,21 @@ export default class Player {
 		
 	}
 	update(deltaTime){
-		if(this.isLoading==1){
-			this.loadTime+=0.1*deltaTime;
+		if(this.isLoading>0){
+			this.loadTime+=deltaTime;
 		}
-		if(this.loadTime>=this.loadTimeMax){
-			this.isLoading=0;
+		if(this.isLoading==1&&this.loadTime>=this.loadTimeMax){
+			this.isLoading=2;
 			this.loadTime=0;
 			console.log("activated");
+			this.chant.charged();
 		}
+		if(this.isLoading==2&&this.loadTime>=this.dischargeTimeMax){
+			this.chant.reset();
+			this.chant.particleSystem=[];
+			this.endSpell();
+		}
+		
 		this.chant.update(deltaTime);
 		this.avatar.update(deltaTime);
 	}
@@ -61,8 +70,9 @@ export default class Player {
 		//console.log("broke");
 	}
 	attack(enemy){
-		if(this.isLoading==0 && this.activeSpell!=null){
+		if(this.isLoading==2 && this.activeSpell!=null){
 			enemy.hit(new magicBall(this.activeSpell));
+			this.endSpell();
 		}
 	}
 }
