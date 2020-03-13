@@ -1,6 +1,6 @@
 import Chant from "./chant.js";
 import * as Av from "./avatar.js";
-import {Spell} from "./spells.js";
+import {Spell, MagicBall, SpellBook} from "./spells.js";
 
 export default class Player {
 	constructor(canvas,avatar){
@@ -9,7 +9,14 @@ export default class Player {
 		this.avatar=avatar;
 		this.avatar.set(this);
 		
-		this.lives=3;
+		//statistics
+		this.hp=3;
+		this.dmg=1;
+		this.def=1;
+		
+		this.effects={};
+		
+		this.spellBook=SpellBook.basicSpellBook();
 		
 		this.activeSpell=null;
 		this.isLoading=0;
@@ -20,17 +27,13 @@ export default class Player {
 		
 		this.endSpell=this.endSpell.bind(this);
 		
-		this.spellBook=[
-			new Spell("sen",[-90,45,-45,90],[1,1,1,1]),
-			new Spell("budyn",[180,90,0,90,180],[1,1,1,1,1]),
-			new Spell("zaba",[90,0,-90,180,45,180],[1,1,1,1,1,1]),
-			new Spell("ciemnosc",[0,-135,-45,180],[1,1,1,1]),
-			new Spell("muchy",[90,-135,0,-135],[2,1,2,1]),
-			new Spell("wiry",[-90,45,-90,135,0],[1,2,1,2,1])
-		];
+		
 		
 	}
 	update(deltaTime){
+		if(this.effects.length>0){
+		console.log(this.effects);
+		}
 		if(this.isLoading>0){
 			this.loadTime+=deltaTime;
 		}
@@ -53,33 +56,53 @@ export default class Player {
 		this.avatar.draw(ctx,ctxM);
 		this.chant.draw(ctx,ctxM);
 	}
+	
+	//when this character gets hit
 	hit(magic){
-		this.lives--;
-		console.log(this.lives);
+		console.log(magic);
+		for (var effect of magic.effects){
+			switch (effect){
+				case "sen":
+					this.endSpell();
+				break;
+				case "budyn":
+					this.addEffect(effect);
+				break;
+				default:
+					this.addEffect(effect);
+			}
+		}
+		console.log(this.effects);
+		this.hp-=magic.dmg/this.def;
+		console.log(this.hp);
 	}
+	//set spell after chanting
 	cast(spell){
 		console.log(spell);
 		this.isLoading=1;
 		this.loadTime=0;
 		this.activeSpell=spell;
 	}
+	//destroy active spell
 	endSpell(){
 		this.loadTime=0;
 		this.activeSpell=null;
 		this.isLoading=0;
 		//console.log("broke");
 	}
+	//attacks enemy with active spell
 	attack(enemy){
 		if(this.isLoading==2 && this.activeSpell!=null){
-			enemy.hit(new magicBall(this.activeSpell));
+			enemy.hit(new MagicBall(this.activeSpell,{'dmg':this.dmg}));
 			this.endSpell();
 		}
 	}
-}
-
-class magicBall{
-	constructor(spell){
-		this.spell=spell;
-	}
 	
+	addEffect(effect){
+		if(this.effects[effect]==undefined){
+			this.effects[effect]=1;
+		}else{
+			this.effects[effect]++;
+		}
+	}
 }

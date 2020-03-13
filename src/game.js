@@ -3,6 +3,7 @@ import * as Ctr from "./controller.js";
 import Menu from "./menu.js";
 import MaskScreen from "/src/maskScreen.js";
 import * as Av from "./avatar.js";
+import Character from "/src/chars.js";
 
 export default class Game {
 	constructor(canvas,canvasM) {
@@ -16,8 +17,16 @@ export default class Game {
 	
 	update(deltaTime){
 		if(this.startGame==1){
+			this.enemyController.update(deltaTime);
 			this.mainPlayer.update(deltaTime);
 			this.enemyPlayer.update(deltaTime);
+			if(this.mainPlayer.hp<=0){
+				this.menu.banner.src="/assets/gameover.png";
+				this.endGame();
+			}else if(this.enemyPlayer.hp<=0){
+				this.menu.banner.src="/assets/win.png";
+				this.endGame();
+			}
 		}else{
 			this.menu.update(deltaTime);
 		}
@@ -25,6 +34,7 @@ export default class Game {
 	
 	draw(ctx,ctxM){
 		if(this.startGame){
+			
 			this.enemyPlayer.draw(ctx,ctxM);
 			this.mainPlayer.draw(ctx,ctxM);
 			
@@ -35,19 +45,27 @@ export default class Game {
 
 	startgame(AI){
 		this.mainPlayer=new Player(this.canvas,new Av.Protag(this.menu.chars[this.menu.nowChar]));
-		var enemyMage=new Image();
-		enemyMage.src="/assets/drob.png";
+		var enemyMage=new Character("/assets/drob.png",600,100,36,122);
 		var that=this;
-		enemyMage.onload=function(){
+		enemyMage.img.onload=function(){
 			that.enemyPlayer=new Player(that.canvas,new Av.Enemy(enemyMage,that.maskScreen,that.mainPlayer));
+			if(AI==1)
+				that.enemyController=new Ctr.Ai(that.enemyPlayer,that.mainPlayer);
+			//else
+				//this.enemyController=new Ctr.Net(this.enemyPlayer);
 			that.startGame=1;
 		}
+		
 		this.controller=new Ctr.Mouser(this.mainPlayer,this);
-		//if(AI==1)
-			//this.enem=new Ctr.Ai(this.enemyPlayer);
-		//else
-			//this.enem=new Ctr.Net(this.enemyPlayer);
 		this.controller.start(this.canvasM);
 		
+	}
+	
+	endGame(){
+		this.startGame=0;
+		this.mainPlayer=null;
+		this.enemyPlayer=null;
+		this.controller=null;
+		this.enemyController=null;
 	}
 }

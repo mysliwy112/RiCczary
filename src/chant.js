@@ -26,7 +26,7 @@ export default class Chant {
 		
 		//actual spell and allowed spells
 		this.spell=0;
-		//console.log(this,player.spellBook)
+		//console.log(this,player.spellBook.spells)
 		
 		//spell symbol
 		this.lens=[];
@@ -177,11 +177,11 @@ export default class Chant {
 				this.dirs[i]=180;
 		}
 		
-		var good=new Array(this.player.spellBook.length).fill(true);
+		var good=new Array(this.player.spellBook.spells.length).fill(true);
 		for(var i=0;i<this.dirs.length;i++){
 			for(var j=0;j<good.length;j++){
 				if(good[j]){
-					if(this.dirs.length!=this.player.spellBook[j].seq.length||this.dirs[i]!=this.player.spellBook[j].seq[i])
+					if(this.dirs.length!=this.player.spellBook.spells[j].seq.length||this.dirs[i]!=this.player.spellBook.spells[j].seq[i])
 						good[j]=false;
 				}
 			}
@@ -189,7 +189,7 @@ export default class Chant {
 
 		for(var j=0;j<good.length;j++){
 			if(good[j]){
-				this.player.cast(this.player.spellBook[j]);
+				this.player.cast(this.player.spellBook.spells[j]);
 				return 1;
 			}
 		}

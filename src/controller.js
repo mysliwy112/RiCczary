@@ -1,19 +1,16 @@
 import Player from "./player.js";
 
-export class Controller{
+export class Mouser{
+	
 	constructor(player,game){
 		this.player=player;
 		this.work=false;
 		this.game=game;
 	}
-}
-
-export class Mouser extends Controller{
 	start(canavas){
-		
 		canavas.addEventListener("mousemove", event =>{
 			if(this.work==true){
-				this.player.chant.move(event.offsetX,event.offsetY)
+				this.player.chant.move(event.offsetX,event.offsetY);
 			}
 		});
 		canavas.addEventListener("mousedown", event =>{
@@ -35,8 +32,54 @@ export class Mouser extends Controller{
 			this.work=false;
 		});
 	}
-	stop(canavas){
-		this.player.chant.finish();
+}
+
+export class Ai{
+	constructor(player,enemies,game){
+		this.player=player;
+		this.enemies=enemies;
+		this.game=game;
 		this.work=false;
+		
+		this.dist=100;
+		this.activ=null;
+		this.step=0;
+		this.len=0;
+		this.lenMax=100;
+		this.speed=0.1;
+		
+		this.posX=0;
+		this.posY=0;
+	}
+	start(canavas){
+
+	}
+	update(deltaTime){
+		if(this.player.isLoading==0&&this.work==false){
+			this.posX=this.player.avatar.dir*this.dist+this.player.avatar.posX;
+			this.posY=this.player.avatar.posY+this.dist;
+			this.player.chant.start(this.posX,this.posY);
+			this.activ=this.player.spellBook.spells[Math.floor(Math.random() * this.player.spellBook.spells.length)];
+			this.work=true;
+		}
+		if(this.work==true){
+			this.posX+=Math.cos(this.activ.seq[this.step]/180*Math.PI)*this.speed*deltaTime;
+			this.posY+=Math.sin(this.activ.seq[this.step]/180*Math.PI)*this.speed*deltaTime;
+			this.len+=this.speed*deltaTime;
+			if(this.len>this.activ.seqL[this.step]*this.lenMax){
+				this.step++;
+				this.len=0;
+			}
+			this.player.chant.move(this.posX,this.posY);
+		}
+		if(this.step>=this.activ.seq.length){
+			this.step=0;
+			this.player.endSpell();
+			this.player.chant.finish();
+			this.work=false;
+		}
+		if(this.player.isLoading==2){
+			this.player.attack(this.enemies);
+		}
 	}
 }

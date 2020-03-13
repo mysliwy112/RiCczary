@@ -1,42 +1,58 @@
 import V from "/src/Vmath.js";
 import Character from "/src/chars.js";
 
+let chmura=new Image();
+chmura.src="/assets/ciemnosc.png";
+
 export class Enemy{
-	constructor(img,maskScreen,from){
-		this.img=img;
+	constructor(charImg,maskScreen,from){
+		this.charImg=charImg;
 		this.maskScreen=maskScreen;
+		
+		this.dir=1;
+		
 		this.hit=this.hit.bind(this,from);
-		this.imgM=this.maskScreen.addObject(img,this.hit);
+		this.imgM=this.maskScreen.addObject(charImg.img,this.hit);
+		
+		//movement
+		
+		//avatar position
 		this.posX=100;
 		this.posY=100;
+		//avatar move direction
 		this.velX=0;
 		this.velY=0;
+		//number of steps to do
 		this.timeMax=1200;
 		this.timeMin=500;
-		this.speed=0.1;
 		this.time=0;
+		//movement speed
+		this.speed=0.1;
+		
 		
 	}
 	
 	set(player){
 		this.player=player;
+
 		this.player.chant.transform=this.enemyScreenTransform;
-		this.player.chant.partSize=15;
-		this.player.chant.partPow=4;
-		this.player.chant.burstPow=1.2;
+		this.player.chant.partSize=29;
+		this.player.chant.partPow=6;
+		this.player.chant.burstPow=1.8;
 		this.player.chant.partMax=1;
 	}
 	
 	
 	enemyScreenTransform(pointX,pointY){
-		pointX=(pointX*-0.5)+600;
-		pointY=(pointY*0.5)+100;
+		pointX=(pointX*-1)+400;
+		pointY=(pointY*1)+50;
 		return [pointX,pointY];
 	}
 	
 	update(deltaTime){
+		this.player.chant.endGravX=this.charImg.rPosX+this.posX;
+		this.player.chant.endGravY=this.charImg.rPosY+this.posY;
 		if(this.time<=0){
-			
 			this.gravityX=(Math.random()-0.5)*100;
 			if(this.posX>170){
 				if(this.gravityX>0)
@@ -67,15 +83,23 @@ export class Enemy{
 			this.posY+=this.velY*this.speed*deltaTime;
 			this.time-=deltaTime;
 		}
-
+		
 	}
 	
 	draw(ctx,ctxM){
 		ctx.drawImage(
-			this.img,
+			this.charImg.img,
 			this.posX,
 			this.posY
 		);
+		if(this.player.effects["ciemnosc"]>0){
+			ctx.drawImage(
+				chmura,
+				this.posX+50,
+				this.posY+50
+			);
+		}
+		
 		ctxM.drawImage(
 			this.imgM,
 			this.posX,
@@ -91,6 +115,7 @@ export class Enemy{
 export class Protag{
 	constructor(charImg){
 		this.charImg=charImg;
+		this.dir=-1;
 	}
 	
 	set(player){

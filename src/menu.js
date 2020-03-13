@@ -9,6 +9,8 @@ export default class Menu {
 				document.getElementById("debugMenu").style.display="none"
 			}
 		});
+		this.banner=new Image();
+		this.banner.src="/assets/choose.png";
 		this.nowChar=0;
 		this.chars=[
 			new Character("/assets/rex.png",600,100,6,210),
@@ -51,6 +53,11 @@ export default class Menu {
 		this.upader.update();
 	}
 	draw(ctx,ctxM){
+		ctx.drawImage(
+				this.banner,
+				0,
+				0
+			);
 		//this.drawer(ctx,ctxM);
 		this.drawer.draw(ctx,ctxM);
 	}
