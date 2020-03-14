@@ -8,14 +8,14 @@ export class Enemy{
 	constructor(charImg,maskScreen,from){
 		this.charImg=charImg;
 		this.maskScreen=maskScreen;
-		
+
 		this.dir=1;
-		
+
 		this.hit=this.hit.bind(this,from);
 		this.imgM=this.maskScreen.addObject(charImg.img,this.hit);
-		
+
 		//movement
-		
+
 		//avatar position
 		this.posX=100;
 		this.posY=100;
@@ -28,27 +28,27 @@ export class Enemy{
 		this.time=0;
 		//movement speed
 		this.speed=0.1;
-		
-		
+
+
 	}
-	
+
 	set(player){
 		this.player=player;
 
-		this.player.chant.transform=this.enemyScreenTransform;
+		//this.player.chant.transform=this.enemyScreenTransform;
 		this.player.chant.partSize=29;
 		this.player.chant.partPow=6;
 		this.player.chant.burstPow=1.8;
 		this.player.chant.partMax=1;
 	}
-	
-	
+
+
 	enemyScreenTransform(pointX,pointY){
 		pointX=(pointX*-1)+400;
 		pointY=(pointY*1)+50;
 		return [pointX,pointY];
 	}
-	
+
 	update(deltaTime){
 		this.player.chant.endGravX=this.charImg.rPosX+this.posX;
 		this.player.chant.endGravY=this.charImg.rPosY+this.posY;
@@ -61,7 +61,7 @@ export class Enemy{
 				if(this.gravityX<0)
 					this.gravityX=this.gravityX*-1;
 			}
-			
+
 			this.gravityY=(Math.random()-0.5)*100;
 			if(this.posY>200){
 				if(this.gravityY>0)
@@ -83,9 +83,9 @@ export class Enemy{
 			this.posY+=this.velY*this.speed*deltaTime;
 			this.time-=deltaTime;
 		}
-		
+
 	}
-	
+
 	draw(ctx,ctxM){
 		ctx.drawImage(
 			this.charImg.img,
@@ -99,14 +99,14 @@ export class Enemy{
 				this.posY+50
 			);
 		}
-		
+
 		ctxM.drawImage(
 			this.imgM,
 			this.posX,
 			this.posY
 		);
 	}
-	
+
 	hit(attacker){
 		attacker.attack(this.player);
 	}
@@ -117,14 +117,14 @@ export class Protag{
 		this.charImg=charImg;
 		this.dir=-1;
 	}
-	
+
 	set(player){
 		this.player=player;
 		this.player.chant.endGravX=this.charImg.rPosX+this.charImg.posX;
 		this.player.chant.endGravY=this.charImg.rPosY+this.charImg.posY;
 	}
 	update(){
-		
+
 	}
 	draw(ctx,ctxM){
 		ctx.drawImage(
