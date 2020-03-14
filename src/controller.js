@@ -108,10 +108,12 @@ export class Net{
 		});
 		this.player.chant.start(0,0);
 		this.socket.addEventListener('message', function (event) {
-
-    	console.log('Message from server \"'+ event.data+"\"");
-			var data=JSON.parse(event.data)
-			that.player.chant.move(data[0],data[1]);
+			var data=JSON.parse(event.data);
+			if(data.done==1){
+					that.player.chant.finish();
+			}else{
+				that.player.chant.move(data.pos[0],data.pos[1]);
+			}
 		});
 	}
 
@@ -121,7 +123,11 @@ export class Net{
 			if(this.posX!=this.enemies.chant.posX&&this.posY!=this.enemies.chant.posY){
 				this.posX=this.enemies.chant.posX;
 				this.posY=this.enemies.chant.posY;
-				this.socket.send("["+JSON.stringify(this.enemies.chant.posX)+", "+JSON.stringify(this.enemies.chant.posY)+"]");
+				var send_dict={
+					done: this.enemies.isLoading,
+					pos: [this.posX, this.posY]
+				};
+				this.socket.send(JSON.stringify(send_dict));
 			}
 		}
 	}
