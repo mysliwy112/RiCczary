@@ -23,8 +23,8 @@ export default class Menu {
 				this.nowChar=this.chars.length-1;
 			}
 			this.setCharImg();
-			
-			
+
+
 		});
 		document.getElementById("rightButt").addEventListener("click", event =>{
 			this.nowChar++;
@@ -33,19 +33,19 @@ export default class Menu {
 			}
 			this.setCharImg();
 		});
-		
+
 		this.enemyMenu=new EnemyMenu(canvas,maskScreen,game);
 	}
-	
+
 	setCharImg(){
 		document.getElementById("charImage").src=this.chars[this.nowChar].img.src;
 	}
-	
+
 	enemyChoose(){
 		this.drawer=this.enemyMenu;
 		this.upader=this.enemyMenu;
 	}
-	
+
 	nonChoose(){
 		this.drawer=NULL;
 	}
@@ -70,7 +70,7 @@ class EnemyMenu{
 		this.ok=0;
 		var that=this;
 		this.loadWait=0;
-		
+
 		this.vsAi=new Image();
 		this.vsAi.src="/assets/vsAi.png";
 		this.vsAi.onload=function(){
@@ -78,11 +78,11 @@ class EnemyMenu{
 			that.vsAiY=canvas.height/2-that.vsAi.height/2;
 			that.loadWait++;
 		};
-		
+
 		this.vsPlayer=new Image();
 		this.vsPlayer.src="/assets/vsPlayer.png"
 		this.vsPlayer.onload=function(){
-			
+
 			that.vsPlayerX=canvas.width/3*2-that.vsAi.width/2;
 			that.vsPlayerY=canvas.height/2-that.vsAi.height/2;
 			that.loadWait++;
@@ -90,7 +90,7 @@ class EnemyMenu{
 		this.maskScreen=maskScreen;
 
 	}
-	
+
 	update(deltaTime){
 		if(this.loadWait==2&&this.ok==0){
 			this.playAi=this.playAi.bind(this);
@@ -100,7 +100,7 @@ class EnemyMenu{
 			this.ok=1;
 		}
 	}
-	
+
 	draw(ctx,ctxM){
 		if(this.ok==1){
 			ctx.drawImage(
@@ -124,12 +124,12 @@ class EnemyMenu{
 				this.vsPlayerY
 			);
 		}
-	}		
+	}
 
 	playAi(){
 		this.game.startgame(1);
 	}
-	
+
 	playPlayer(){
 		this.game.startgame(0);
 	}

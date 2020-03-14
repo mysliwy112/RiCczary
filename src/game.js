@@ -14,7 +14,7 @@ export default class Game {
 		this.menu=new Menu(canvas,this.maskScreen,this);
 		this.menu.enemyChoose();
 	}
-	
+
 	update(deltaTime){
 		if(this.startGame==1){
 			this.enemyController.update(deltaTime);
@@ -31,13 +31,13 @@ export default class Game {
 			this.menu.update(deltaTime);
 		}
 	}
-	
+
 	draw(ctx,ctxM){
 		if(this.startGame){
-			
+
 			this.enemyPlayer.draw(ctx,ctxM);
 			this.mainPlayer.draw(ctx,ctxM);
-			
+
 		}else{
 			this.menu.draw(ctx,ctxM);
 		}
@@ -45,22 +45,25 @@ export default class Game {
 
 	startgame(AI){
 		this.mainPlayer=new Player(this.canvas,new Av.Protag(this.menu.chars[this.menu.nowChar]));
-		var enemyMage=new Character("/assets/drob.png",600,100,36,122);
+		var enemyMage=new Character("/assets/rex.png",600,100,6,210);
 		var that=this;
 		enemyMage.img.onload=function(){
 			that.enemyPlayer=new Player(that.canvas,new Av.Enemy(enemyMage,that.maskScreen,that.mainPlayer));
-			if(AI==1)
+			if(AI==1){
 				that.enemyController=new Ctr.Ai(that.enemyPlayer,that.mainPlayer);
-			//else
-				//this.enemyController=new Ctr.Net(this.enemyPlayer);
+			}else{
+				that.enemyController=new Ctr.Net(that.enemyPlayer,that.mainPlayer);
+				that.enemyController.start(7891);
+			}
 			that.startGame=1;
 		}
-		
+
 		this.controller=new Ctr.Mouser(this.mainPlayer,this);
 		this.controller.start(this.canvasM);
-		
+
+
 	}
-	
+
 	endGame(){
 		this.startGame=0;
 		this.mainPlayer=null;
