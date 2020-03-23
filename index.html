@@ -53,27 +53,70 @@
 			width: 810px;
 			<!-- background-color: #555; -->
 		}
+		
+		.tab {
+			overflow: hidden;
+			border: 1px solid #ccc;
+			background-color: #f1f1f1;
+		}
+
+		.tab button {
+			background-color: inherit;
+			float: left;
+			border: none;
+			outline: none;
+			cursor: pointer;
+			padding: 14px 16px;
+			transition: 0.3s;
+		}
+		
+		.tab button:hover {
+			background-color: #ddd;
+		}
+
+		.tab button.active {
+			background-color: #ccc;
+		}
+
+		.tabcontent {
+			display: none;
+			padding: 6px 12px;
+			border: 1px solid #ccc;
+			border-top: none;
+		}
 	</style>
 	
 </head>
-
+	
 <body>	
-	<!-- <img id="partMage" style="opacity:0.5" src="assets/mag.png"> -->
 	<div class="row">
 		<div>
-			<!-- <canvas id="enemyScreen" width="800" height="600"></canvas> -->
 			<canvas id="gameScreen" width="800" height="600"></canvas>
 			<canvas id="maskScreen" width="800" height="600"></canvas>
 			<div id="dummy"></div>
 		</div>
-		
-		<div id="charChoose">
-			<button class="charButt" id="leftButt">&lt;</button>
-			<div id="char">
-				<input id="charName">Name</input>
-				<img id="charImage" src="/assets/rex.png">
+		<div id="book">
+			<div class="tab">
+				<button class="tablinks" onclick="openPage(event, 'character')">character</button>
+				<button class="tablinks" onclick="openPage(event, 'spells')">spells</button>
+				<button class="tablinks" onclick="openPage(event, 'settings')">settings</button>
 			</div>
-			<button class="charButt" id="rightButt">&gt;</button>
+			<div id="character" class="page">
+				<div id="charChoose">
+					<button class="charButt" id="leftButt" onclick="clicked()">&lt;</button>
+					<div id="char">
+						<input id="charName">Name</input>
+						<img id="charImage" src="/assets/rex.png">
+					</div>
+					<button class="charButt" id="rightButt">&gt;</button>
+				</div>
+			</div>
+			<div id="spells" class="page">
+				<h3>Spells here</h3>
+			</div>
+			<div id="settings" class="page">
+				<h3>Settings here</h3>
+			</div>
 		</div>
 	</div>
 	

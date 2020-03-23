@@ -10,7 +10,7 @@ export default class Player {
 		this.avatar.set(this);
 		
 		//statistics
-		this.hp=3;
+		this.hp=5;
 		this.dmg=1;
 		this.def=1;
 		
@@ -20,7 +20,7 @@ export default class Player {
 		
 		this.activeSpell=null;
 		this.isLoading=0;
-		this.loadTimeMax=4000;
+		this.loadTimeMax=1000;
 		this.loadTime=0;
 		this.dischargeTimeMax=10000;
 		
@@ -59,13 +59,22 @@ export default class Player {
 	
 	//when this character gets hit
 	hit(magic){
-		console.log(magic);
+		console.log("this");
 		for (var effect of magic.effects){
 			switch (effect){
 				case "sen":
 					this.endSpell();
 				break;
+				case "clear":
+					this.effects={};
+				break;
 				case "budyn":
+					this.addEffect(effect);
+				break;
+				case "ciemnosc":
+					this.addEffect(effect);
+				break;
+				case "wiry":
 					this.addEffect(effect);
 				break;
 				default:
@@ -88,6 +97,9 @@ export default class Player {
 		this.loadTime=0;
 		this.activeSpell=null;
 		this.isLoading=0;
+		this.chant.reset();
+		this.chant.particleSystem=[];
+		
 		//console.log("broke");
 	}
 	//attacks enemy with active spell

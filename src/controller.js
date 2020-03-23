@@ -5,20 +5,29 @@ export class Mouser{
 	constructor(player,game){
 		this.player=player;
 		this.work=false;
+		this.toActivate=false;
 		this.game=game;
 	}
 	start(canavas){
 		canavas.addEventListener("mousemove", event =>{
 			if(this.work==true){
+				if(this.toActivate==true){
+					this.toActivate=false;
+					this.player.endSpell();
+					this.player.chant.start(event.offsetX,event.offsetY);
+				}
 				this.player.chant.move(event.offsetX,event.offsetY);
 			}
 		});
 		canavas.addEventListener("mousedown", event =>{
-			this.player.chant.start(event.offsetX,event.offsetY);
+			if(this.player.activeSpell==null){
+				this.player.chant.start(event.offsetX,event.offsetY);
+			}else{
+				this.toActivate=true;	
+			}
 			this.work=true;
 		});
 		canavas.addEventListener("mouseup", event =>{
-			this.player.endSpell();
 			this.player.chant.finish();
 			this.work=false;
 		});
@@ -45,8 +54,8 @@ export class Ai{
 		this.activ=null;
 		this.step=0;
 		this.len=0;
-		this.lenMax=100;
-		this.speed=0.1;
+		this.lenMax=150;
+		this.speed=1;
 
 		this.posX=0;
 		this.posY=0;
@@ -56,10 +65,11 @@ export class Ai{
 	}
 	update(deltaTime){
 		if(this.player.isLoading==0&&this.work==false){
-			this.posX=this.player.avatar.dir*this.dist+this.player.avatar.posX;
+			this.posX=this.player.avatar.dir*this.dist*(-1)+this.player.avatar.posX;
 			this.posY=this.player.avatar.posY+this.dist;
 			this.player.chant.start(this.posX,this.posY);
 			this.activ=this.player.spellBook.spells[Math.floor(Math.random() * this.player.spellBook.spells.length)];
+			//this.activ=this.player.spellBook.spells[5];
 			this.work=true;
 		}
 		if(this.work==true){
@@ -74,7 +84,6 @@ export class Ai{
 		}
 		if(this.step>=this.activ.seq.length){
 			this.step=0;
-			this.player.endSpell();
 			this.player.chant.finish();
 			this.work=false;
 		}

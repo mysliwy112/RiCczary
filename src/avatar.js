@@ -12,7 +12,7 @@ export class Enemy{
 		this.dir=1;
 
 		this.hit=this.hit.bind(this,from);
-		this.imgM=this.maskScreen.addObject(charImg.img,this.hit);
+		this.imgM=this.maskScreen.addObject(this.charImg.img,this.hit);
 
 		//movement
 
@@ -35,7 +35,7 @@ export class Enemy{
 	set(player){
 		this.player=player;
 
-		//this.player.chant.transform=this.enemyScreenTransform;
+		this.player.chant.transform=this.enemyScreenTransform;
 		this.player.chant.partSize=29;
 		this.player.chant.partPow=6;
 		this.player.chant.burstPow=1.8;
@@ -45,7 +45,6 @@ export class Enemy{
 
 	enemyScreenTransform(pointX,pointY){
 		pointX=(pointX*-1)+400;
-		pointY=(pointY*1)+50;
 		return [pointX,pointY];
 	}
 
@@ -113,13 +112,22 @@ export class Enemy{
 }
 
 export class Protag{
-	constructor(charImg){
+	constructor(charImg,maskScreen){
 		this.charImg=charImg;
+		this.maskScreen=maskScreen;
+
 		this.dir=-1;
+		this.posX=this.charImg.posX;
+		this.posY=this.charImg.posY;
+
+
 	}
 
 	set(player){
 		this.player=player;
+		this.hit=this.hit.bind(this,this.player);
+		console.log("som");
+		this.imgM=this.maskScreen.addObject(this.charImg.img,this.hit);
 		this.player.chant.endGravX=this.charImg.rPosX+this.charImg.posX;
 		this.player.chant.endGravY=this.charImg.rPosY+this.charImg.posY;
 	}
@@ -129,8 +137,17 @@ export class Protag{
 	draw(ctx,ctxM){
 		ctx.drawImage(
 			this.charImg.img,
-			this.charImg.posX,
-			this.charImg.posY
+			this.posX,
+			this.posY
 		);
+		ctxM.drawImage(
+			this.imgM,
+			this.posX,
+			this.posY
+		);
+	}
+
+	hit(attacker){
+		attacker.attack(this.player);
 	}
 }

@@ -3,6 +3,7 @@ import * as Ctr from "./controller.js";
 import Menu from "./menu.js";
 import MaskScreen from "/src/maskScreen.js";
 import * as Av from "./avatar.js";
+import * as Ef from "./effects.js";
 import Character from "/src/chars.js";
 
 export default class Game {
@@ -34,17 +35,28 @@ export default class Game {
 
 	draw(ctx,ctxM){
 		if(this.startGame){
-
 			this.enemyPlayer.draw(ctx,ctxM);
 			this.mainPlayer.draw(ctx,ctxM);
-
+			if(this.mainPlayer.effects["wiry"]>0){
+				if(this.whril==undefined){
+					this.whril=new Ef.Whril();
+				}else{
+					this.whril.move(ctx,this.mainPlayer.effects["wiry"]);
+				}
+			}else{
+				if(this.whril!=undefined){
+					if(this.whril.finish(ctx)==1){
+						this.whril=undefined;
+					}
+				}
+			}
 		}else{
 			this.menu.draw(ctx,ctxM);
 		}
 	}
 
 	startgame(AI){
-		this.mainPlayer=new Player(this.canvas,new Av.Protag(this.menu.chars[this.menu.nowChar]));
+		this.mainPlayer=new Player(this.canvas,new Av.Protag(this.menu.chars[this.menu.nowChar],this.maskScreen));
 		var enemyMage=new Character("/assets/rex.png",600,100,6,210);
 		var that=this;
 		enemyMage.img.onload=function(){
@@ -60,8 +72,6 @@ export default class Game {
 
 		this.controller=new Ctr.Mouser(this.mainPlayer,this);
 		this.controller.start(this.canvasM);
-
-
 	}
 
 	endGame(){

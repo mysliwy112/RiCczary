@@ -36,14 +36,14 @@ export default class Chant {
 		this.partSize=30;
 		this.partPow=8;
 		this.burstPow=2;
-		this.partMax=3;
+		this.partMax=1;
 		
 		//for checking angles and lengths
 		this.tans=[];
 		this.points=[];
 		
 		//settings
-		this.freqPart=8;
+		this.freqPart=4;
 		this.difMin=0.7
 		this.checkBound=10
 		this.checkSize=3;
@@ -51,6 +51,14 @@ export default class Chant {
 		
 		//cretion
 		this.creationMode=false;
+		
+		//states
+		this.burstDone=0;
+		
+		
+		
+		
+		
 		
 	}
 	
@@ -66,13 +74,16 @@ export default class Chant {
 		var vY=mouseY-this.posY;
 		var len=V.len(vX,vY);
 		var i=0;
-		for(var i=0;i<len;i+=this.freqPart){
+		var i=this.freqPart
+		for(var i=this.freqPart;i<len;i+=this.freqPart){
 			for(var j=0;j<this.partMax;j++){
 				this.particleSystem.push(new Particle(this.posX+vX*i/len,this.posY+vY*i/len,this.partSize,this.partPow));
 			}
 		}
-		this.posX=mouseX;
-		this.posY=mouseY;
+		if(len>this.freqPart){
+			this.posX=mouseX;
+			this.posY=mouseY;
+		}
 	}
 	
 	check(mouseX,mouseY){
@@ -147,8 +158,8 @@ export default class Chant {
 					this.points.shift();
 				this.mean=mean;
 			}
-				this.checkX=mouseX;
-				this.checkY=mouseY;
+			this.checkX=mouseX;
+			this.checkY=mouseY;
 		}
 	}
 	
@@ -224,28 +235,21 @@ export default class Chant {
 	}
 	
 	finish(){
-		this.particleSystem.forEach(part => {
-			part.time=part.timeMax;
-			part.velX*=this.burstPow;
-			part.velY*=this.burstPow;
-		});
 		this.lens.push(V.len(this.posX-this.lastX,this.posY-this.lastY));
 		
 		if(this.dirs.length>0&&this.dirs.length==this.lens.length){
 			if(this.creationMode)
 				this.create();
-			else
-				if(this.compare()){
-					var a=this.player.loadTimeMax;
-					this.particleSystem.forEach(part =>{
-						part.timeMax=a;
-						part.time=part.timeMax+111;
-						part.gravitX=this.endGravX;
-						part.gravitY=this.endGravY;
-						part.loss=0.98;
-						
-					});
-				}
+			else if(this.compare()){
+				this.particleSystem.forEach(part => {
+					part.timeMax=this.player.loadTimeMax;
+					part.time=part.timeMax;
+					part.velX*=this.burstPow;
+					part.velY*=this.burstPow;
+				});
+			}else{
+				this.particleSystem = [];	
+			}
 		}else{
 			this.particleSystem = [];
 		}
@@ -254,7 +258,7 @@ export default class Chant {
 	
 	charged(){
 		this.particleSystem.forEach(part =>{
-			part.timeMax=10000;
+			part.timeMax=this.player.dischargeTimeMax-10;
 			part.time=part.timeMax;
 			part.velX*=this.burstPow;
 			part.velY*=this.burstPow;
@@ -264,15 +268,30 @@ export default class Chant {
 	}
 	
 	update(deltaTime){
-		
+		if(this.player.isLoading==1&&this.burstPow*200<this.player.loadTime){
+			if(this.burstDone==0){
+				this.particleSystem.forEach(part =>{
+					part.time=part.timeMax+111;
+					part.gravitX=this.endGravX;
+					part.gravitY=this.endGravY;
+					part.loss=0.98;
+				});
+				this.burstDone=1;
+			}else{
+				this.particleSystem.forEach(part =>{
+					part.gravitX=this.endGravX;
+					part.gravitY=this.endGravY;
+				});
+			}
+		}else{
+			this.burstDone=0;
+		}
 		this.particleSystem.forEach(part => part.update(deltaTime));
 	}
 	draw(ctx,ctxM){
-		//var ctx=this.canvas.getContext("2d");
 		if(document.getElementById("DBG").checked){
 			ctx.beginPath();
 			ctx.moveTo(this.posX,this.posY);
-			//var v=V.normalize(Math.cos(this.mean),Math.sin(this.mean));
 			var v=V.normalize(Math.cos(this.mean),Math.sin(this.mean));
 			ctx.lineTo(this.posX+v[0]*200,this.posY+v[1]*200);
 			ctx.stroke();
@@ -296,7 +315,6 @@ export default class Chant {
 			ctx.moveTo(posX,posY);
 			for(var i=0;i<this.lens.length;i++){
 				var v=V.normalize(Math.cos(V.toNearest(this.dirs[i],45/180*Math.PI)),Math.sin(V.toNearest(this.dirs[i],45/180*Math.PI)));
-				//console.log(V.toNearest(this.dirs[i],45/180*Math.PI));
 				posX=posX+v[0]*this.lens[i]/5;
 				posY=posY+v[1]*this.lens[i]/5;
 				ctx.lineTo(posX,posY);
