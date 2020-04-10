@@ -4,8 +4,7 @@ import V from "/src/Vmath.js";
 let partMax=document.getElementById("partMax");
 
 export default class Chant {
-	constructor(player,canvas,transform=null) {
-		this.player=player;
+	constructor(transform=null) {
 		this.transform=transform;
 		//last position for length checking
 		this.lastX;
@@ -19,8 +18,7 @@ export default class Chant {
 		
 		//particles
 		this.particleSystem = [];
-		this.canvas=canvas;
-		
+	
 		this.endGravX=0;
 		this.endGravY=0;
 		
@@ -54,13 +52,13 @@ export default class Chant {
 		
 		//states
 		this.burstDone=0;
-		
-		
-		
-		
-		
-		
 	}
+	
+	setPlayer(player){
+		this.player=player;
+	}
+	
+	
 	
 	move(mouseX,mouseY){
 		this.check(mouseX,mouseY);
@@ -310,8 +308,8 @@ export default class Chant {
 		}
 		if(this.creationMode){
 			ctx.beginPath();
-			var posX=this.canvas.width/2;
-			var posY=this.canvas.height/2;
+			var posX=800/2;
+			var posY=600/2;
 			ctx.moveTo(posX,posY);
 			for(var i=0;i<this.lens.length;i++){
 				var v=V.normalize(Math.cos(V.toNearest(this.dirs[i],45/180*Math.PI)),Math.sin(V.toNearest(this.dirs[i],45/180*Math.PI)));

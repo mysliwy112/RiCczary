@@ -3,36 +3,53 @@ import * as Av from "./avatar.js";
 import {Spell, MagicBall, SpellBook} from "./spells.js";
 
 export default class Player {
-	constructor(canvas,avatar){
-
-		this.chant=new Chant(this,canvas);
-		this.avatar=avatar;
-		this.avatar.set(this);
+	constructor(stats,avatar,chant){
+		if(chant!=undefined){
+			this.addChant(chant);
+		}else{
+			this.addChant(new Chant());
+		}
+		if(avatar!=undefined){
+			this.addAvatar();
+		}
+		
 		
 		//statistics
-		this.hp=5;
-		this.dmg=1;
-		this.def=1;
+		this.hp=stats.hp;
+		this.dmg=stats.dmg;
+		this.def=stats.def;
 		
-		this.effects={};
+		this.effects=stats.effects;
 		
-		this.spellBook=SpellBook.basicSpellBook();
+		this.spellBook=stats.book;
 		
 		this.activeSpell=null;
 		this.isLoading=0;
-		this.loadTimeMax=1000;
+		this.loadTimeMax=5000;
 		this.loadTime=0;
 		this.dischargeTimeMax=10000;
 		
-		
 		this.endSpell=this.endSpell.bind(this);
 		
+		this.allies=[];
+		this.enemies=[];
 		
 		
 	}
+	addChant(chant){
+		this.chant=chant;
+		this.chant.setPlayer(this);
+	}
+	
+	addAvatar(avatar){
+		this.avatar=avatar;
+		this.avatar.setPlayer(this);
+	}
+	
+	
+	
 	update(deltaTime){
 		if(this.effects.length>0){
-		console.log(this.effects);
 		}
 		if(this.isLoading>0){
 			this.loadTime+=deltaTime;
@@ -52,6 +69,7 @@ export default class Player {
 		this.chant.update(deltaTime);
 		this.avatar.update(deltaTime);
 	}
+	
 	draw(ctx,ctxM){
 		this.avatar.draw(ctx,ctxM);
 		this.chant.draw(ctx,ctxM);
@@ -81,9 +99,7 @@ export default class Player {
 					this.addEffect(effect);
 			}
 		}
-		console.log(this.effects);
 		this.hp-=magic.dmg/this.def;
-		console.log(this.hp);
 	}
 	//set spell after chanting
 	cast(spell){

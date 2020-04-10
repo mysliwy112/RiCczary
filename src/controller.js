@@ -2,14 +2,14 @@ import Player from "./player.js";
 
 export class Mouser{
 
-	constructor(player,game){
-		this.player=player;
+	constructor(canvas){
+		this.isMouse=true;
 		this.work=false;
 		this.toActivate=false;
-		this.game=game;
+		this.canvas=canvas;
 	}
-	start(canavas){
-		canavas.addEventListener("mousemove", event =>{
+	start(){
+		this.canvas.addEventListener("mousemove", event =>{
 			if(this.work==true){
 				if(this.toActivate==true){
 					this.toActivate=false;
@@ -19,7 +19,7 @@ export class Mouser{
 				this.player.chant.move(event.offsetX,event.offsetY);
 			}
 		});
-		canavas.addEventListener("mousedown", event =>{
+		this.canvas.addEventListener("mousedown", event =>{
 			if(this.player.activeSpell==null){
 				this.player.chant.start(event.offsetX,event.offsetY);
 			}else{
@@ -27,11 +27,11 @@ export class Mouser{
 			}
 			this.work=true;
 		});
-		canavas.addEventListener("mouseup", event =>{
+		this.canvas.addEventListener("mouseup", event =>{
 			this.player.chant.finish();
 			this.work=false;
 		});
-		canavas.addEventListener("mouseleave", event =>{
+		this.canvas.addEventListener("mouseleave", event =>{
 			this.player.chant.reset();
 			this.work=false;
 		});
@@ -41,13 +41,15 @@ export class Mouser{
 			this.work=false;
 		});
 	}
+	update(deltaTime){
+		
+	}
+	
 }
 
+
 export class Ai{
-	constructor(player,enemies,game){
-		this.player=player;
-		this.enemies=enemies;
-		this.game=game;
+	constructor(){
 		this.work=false;
 
 		this.dist=100;
@@ -55,12 +57,12 @@ export class Ai{
 		this.step=0;
 		this.len=0;
 		this.lenMax=150;
-		this.speed=1;
+		this.speed=0.5;
 
 		this.posX=0;
 		this.posY=0;
 	}
-	start(canavas){
+	start(){
 
 	}
 	update(deltaTime){
@@ -89,7 +91,7 @@ export class Ai{
 		}
 		if(this.player.isLoading==2){
 			if(Math.random()<0.90){
-				this.player.attack(this.enemies);
+				this.player.attack(this.player.enemies[Math.floor(Math.random()*this.player.enemies.length)]);
 			}else {
 				this.player.endSpell();
 			}
@@ -99,18 +101,14 @@ export class Ai{
 
 export class Net{
 
-	constructor(player,enemies,game){
-		this.player=player;
-		this.enemies=enemies;
+	constructor(port){
+		this.port=port;
 		this.work=false;
-		this.game=game;
 		this.connected=false;
-
-
 	}
-	start(port){
+	start(){
 		var that=this;
-		this.socket= new WebSocket('ws://localhost:'+port);
+		this.socket= new WebSocket('ws://localhost:'+this.port);
 		this.socket.addEventListener('open', function (event) {
     	that.connected=true;
 			console.log("connected");
@@ -128,12 +126,11 @@ export class Net{
 
 	update(deltaTime){
 		if(this.connected){
-
-			if(this.posX!=this.enemies.chant.posX&&this.posY!=this.enemies.chant.posY){
-				this.posX=this.enemies.chant.posX;
-				this.posY=this.enemies.chant.posY;
+			if(this.posX!=this.player.enemies.chant.posX&&this.posY!=this.player.enemies.chant.posY){
+				this.posX=this.player.enemies.chant.posX;
+				this.posY=this.player.enemies.chant.posY;
 				var send_dict={
-					done: this.enemies.isLoading,
+					done: this.player.enemies.isLoading,
 					pos: [this.posX, this.posY]
 				};
 				this.socket.send(JSON.stringify(send_dict));

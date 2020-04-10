@@ -1,14 +1,18 @@
 import Game from "/src/game.js";
 import {SpellBook} from "./spells.js";
+import {Book} from "./menu.js";
 
-//let canvas = document.getElementById("gameScreen");
+//visible canvas
 let canvas = document.getElementById("gameScreen");
 let ctx = canvas.getContext("2d");
-
+//clickable canvas
 let canvasM = document.getElementById("maskScreen");
 let ctxM = canvasM.getContext("2d");
 
-let game = new Game(canvas,canvasM);
+let game= new Game(canvas,canvasM);
+
+let book= new Book(game);
+book.openPage("character");
 
 let lastTime = 0;
 function gameLoop(timestamp){
@@ -27,12 +31,6 @@ function gameLoop(timestamp){
 requestAnimationFrame(gameLoop);
 
 
-function newGame(){
-	var mcStats={};
-	mcStats.book=SpellBook.basicSpellBook();
-	mcStats.hp=5;
-	mcStats.dmg=1;
-	mcStats.def=1;
-}
+
 
 

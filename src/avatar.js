@@ -4,18 +4,97 @@ import Character from "/src/chars.js";
 let chmura=new Image();
 chmura.src="/assets/ciemnosc.png";
 
-export class Enemy{
-	constructor(charImg,maskScreen,from){
+export class Avatar{
+	constructor(charImg){
 		this.charImg=charImg;
-		this.maskScreen=maskScreen;
+		
+		//character position
+		this.dir=-1;
+		this.posX=this.charImg.posX;
+		this.posY=this.charImg.posY;
+		
+		this.hpTeam="protagBars";
+		
+	}
+	addBar(){
+		var template=document.getElementById("defaultBar");
+		this.hpBar=template.cloneNode(true);
+		
+		this.hpBar.max=this.player.hp;
+		
+		this.hpBar.optimum=this.player.hp;
+		this.hpBar.high=this.player.hp*0.8;
+		this.hpBar.low=this.player.hp*0.3;
+		
+		this.hpBar.value=this.player.hp;
+
+		this.hpBar.removeAttribute("id");
+		console.log(this.hpBar);
+		document.getElementById(this.hpTeam).appendChild(this.hpBar);
+	}
+	
+	
+	
+	setPlayer(player){
+		this.player=player;
+		this.chantSettings();
+		this.addBar();
+	}
+	
+	addHitbox(maskScreen,clicker){
+		this.imgM=maskScreen.addObject(this.charImg.img,this.hit.bind(this,clicker));
+	}
+	
+	
+	chantSettings(){
+		this.player.chant.endGravX=this.charImg.rPosX+this.charImg.posX;
+		this.player.chant.endGravY=this.charImg.rPosY+this.charImg.posY;
+		this.player.chant.partSize=30;
+		this.player.chant.partPow=8;
+		this.player.chant.burstPow=2;
+		this.player.chant.partMax=2;
+	}
+	
+	update(deltaTime){
+		this.hpBar.value=this.player.hp;
+	}
+	
+	draw(ctx,ctxM){
+		ctx.drawImage(
+			this.charImg.img,
+			this.posX,
+			this.posY
+		);
+		
+		if(this.player.effects["ciemnosc"]>0){
+			ctx.drawImage(
+				chmura,
+				this.posX+50,
+				this.posY+50
+			);
+		}
+		
+		if(this.imgM!=undefined){
+			ctxM.drawImage(
+				this.imgM,
+				this.posX,
+				this.posY
+			);
+		}
+	}
+	
+
+
+	hit(attacker){
+		attacker.attack(this.player);
+	}
+}
+
+export class Enemy extends Avatar{
+	constructor(charImg){
+		super(charImg);
 
 		this.dir=1;
-
-		this.hit=this.hit.bind(this,from);
-		this.imgM=this.maskScreen.addObject(this.charImg.img,this.hit);
-
-		//movement
-
 		//avatar position
 		this.posX=100;
 		this.posY=100;
@@ -28,20 +107,21 @@ export class Enemy{
 		this.time=0;
 		//movement speed
 		this.speed=0.1;
-
+		this.hpTeam="enemiesBars";
 
 	}
+	
 
-	set(player){
-		this.player=player;
-
+	
+	
+	
+	chantSettings(){
 		this.player.chant.transform=this.enemyScreenTransform;
 		this.player.chant.partSize=29;
 		this.player.chant.partPow=6;
 		this.player.chant.burstPow=1.8;
-		this.player.chant.partMax=1;
+		this.player.chant.partMax=1;	
 	}
-
 
 	enemyScreenTransform(pointX,pointY){
 		pointX=(pointX*-1)+400;
@@ -49,6 +129,7 @@ export class Enemy{
 	}
 
 	update(deltaTime){
+		this.hpBar.value=this.player.hp;
 		this.player.chant.endGravX=this.charImg.rPosX+this.posX;
 		this.player.chant.endGravY=this.charImg.rPosY+this.posY;
 		if(this.time<=0){
@@ -83,71 +164,5 @@ export class Enemy{
 			this.time-=deltaTime;
 		}
 
-	}
-
-	draw(ctx,ctxM){
-		ctx.drawImage(
-			this.charImg.img,
-			this.posX,
-			this.posY
-		);
-		if(this.player.effects["ciemnosc"]>0){
-			ctx.drawImage(
-				chmura,
-				this.posX+50,
-				this.posY+50
-			);
-		}
-
-		ctxM.drawImage(
-			this.imgM,
-			this.posX,
-			this.posY
-		);
-	}
-
-	hit(attacker){
-		attacker.attack(this.player);
-	}
-}
-
-export class Protag{
-	constructor(charImg,maskScreen){
-		this.charImg=charImg;
-		this.maskScreen=maskScreen;
-
-		this.dir=-1;
-		this.posX=this.charImg.posX;
-		this.posY=this.charImg.posY;
-
-
-	}
-
-	set(player){
-		this.player=player;
-		this.hit=this.hit.bind(this,this.player);
-		console.log("som");
-		this.imgM=this.maskScreen.addObject(this.charImg.img,this.hit);
-		this.player.chant.endGravX=this.charImg.rPosX+this.charImg.posX;
-		this.player.chant.endGravY=this.charImg.rPosY+this.charImg.posY;
-	}
-	update(){
-
-	}
-	draw(ctx,ctxM){
-		ctx.drawImage(
-			this.charImg.img,
-			this.posX,
-			this.posY
-		);
-		ctxM.drawImage(
-			this.imgM,
-			this.posX,
-			this.posY
-		);
-	}
-
-	hit(attacker){
-		attacker.attack(this.player);
 	}
 }

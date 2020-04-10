@@ -23,35 +23,36 @@
 		}
 		
 		#charChoose{
-			width: 50%;
 			
 		}
+		
 		.row{
-			width: 100%;
+			overflow: hidden;
 		}
 
 		#charImage{
-			<!-- margin-left: 50%; -->
+			width:100%;
 		}
+		
 		#charName{
-			<!-- margin-left: 50%; -->
+			width:100%;
 		}
 		
 		.charButt{
-			margin-top: auto;
-			margin-bottom: auto;
-			
+			display: inline-block;
 		}
+		
 		#char{
-			<!-- max-width: 1000px; -->
-			<!-- overflow: auto !important; -->
+			display: inline-block;
+			vertical-align: middle;
+			width:265;
 		}
-		#dummy{
+		
+		#game{
 			float: left;
-			width: 50%;
 			height: 610px;
 			width: 810px;
-			<!-- background-color: #555; -->
+			overflow: hidden;
 		}
 		
 		.tab {
@@ -78,30 +79,107 @@
 			background-color: #ccc;
 		}
 
-		.tabcontent {
+		.page {
 			display: none;
 			padding: 6px 12px;
 			border: 1px solid #ccc;
 			border-top: none;
 		}
+		
+		#book{
+			overflow: hidden;
+		}
+		
+		.grd{
+			display: grid;
+			grid-template-columns: repeat( auto-fill, minmax(120px, 1fr) );
+			grid-gap: 10px;
+		}
+		.element{
+			border: 1px solid rgba(0, 0, 0, 0.8);
+			background-color: orange;
+			padding: 20px;
+			/*float:left;*/
+			/*width:120;*/
+			/*height:120;*/
+		}
+		#defaultSpell{
+			display:none;
+		}
+		.description{
+			width:100%;
+		}
+		.shape{
+			display: block;
+			margin: auto;
+		}
+		#hpBars{
+			width:800px;
+		}
+		
+		#enemiesBars {
+			width:50%;
+			float:left;
+		}
+		
+		#protagBars{
+			width:50%;
+			float:right;
+		}
+		
+		#defaultBar{
+			display:none;
+		}
+		
+		.hpBar{
+			width:80%
+		}
+		
+		meter::-webkit-meter-bar {
+			background: #EEE;
+			box-shadow: 0 2px 3px rgba(0,0,0,0.2) inset;
+			border-radius: 3px;
+		}
+
+		meter::-webkit-meter-optimum-value {
+			background: #86CC00; /* Green */
+			border-radius: 3px;
+		}
+
+		meter::-webkit-meter-suboptimum-value {
+			background: #FFDB1A; /* Yellow */
+			border-radius: 3px;
+		}
+
+		meter::-webkit-meter-even-less-good-value {
+			background: #CC4600; /* Red */
+			border-radius: 3px;
+		}
+		
 	</style>
-	
 </head>
 	
 <body>	
 	<div class="row">
-		<div>
+		<div id="game">
 			<canvas id="gameScreen" width="800" height="600"></canvas>
 			<canvas id="maskScreen" width="800" height="600"></canvas>
-			<div id="dummy"></div>
 		</div>
 		<div id="book">
 			<div class="tab">
-				<button class="tablinks" onclick="openPage(event, 'character')">character</button>
-				<button class="tablinks" onclick="openPage(event, 'spells')">spells</button>
-				<button class="tablinks" onclick="openPage(event, 'settings')">settings</button>
+				<!-- <button class="tablinks" id="bmenu" onclick="openPage('menu')">menu</button> -->
+				<button class="tablinks" id="bcharacter" onclick="openPage('character')">character</button>
+				<button class="tablinks" id="bspells" onclick="openPage('spells')">spells</button>
+				<button class="tablinks" id="bsettings" onclick="openPage('settings')">settings</button>
 			</div>
-			<div id="character" class="page">
+			
+			<div id="menu" class="page">
+				<button class="mainButton" onclick="newGame()">New Game</button>
+				<button class="mainButton" onclick="saveGame()">Save Game</button>
+				<button class="mainButton" onclick="loadGame()">Load Game</button>
+			</div>
+			
+			<!-- <div id="createGame" class="page">
 				<div id="charChoose">
 					<button class="charButt" id="leftButt" onclick="clicked()">&lt;</button>
 					<div id="char">
@@ -110,31 +188,64 @@
 					</div>
 					<button class="charButt" id="rightButt">&gt;</button>
 				</div>
+				<button class="mainButton" onclick="activateGame()">OK</button>
+			</div> -->
+			
+			<div id="saves" class="page">
+				<button class="save">1</button>
+				<button class="save">2</button>
+				<button class="save">3</button>
 			</div>
+			
+			<div id="character" class="page">
+				<div id="charChoose">
+					<button class="charButt" id="leftButt" onclick="clicked()">&lt;</button>
+					<div id="char">
+						<input id="charName" placeholder="Name"></input>
+						<img id="charImage" src="/assets/rex.png">
+					</div>
+					<button class="charButt" id="rightButt">&gt;</button>
+				</div>
+				<button class="mainButton" onclick="activateGame()">OK</button>
+			</div>
+			
 			<div id="spells" class="page">
-				<h3>Spells here</h3>
+				<h3 id="casterName">Spells here</h3>
+				<div class="element" id="defaultSpell">
+					<svg width="100" height="75" id="spellShp" class="shape">
+						<polyline cx="0" cy="0" transform="translate(50,37.5) scale(0.3)" style="fill:none;stroke:purple;stroke-width:2;" />
+					</svg>
+					<p class="description" id="spellDesc" >Dud</p>
+				</div>
+				<div id="spellsGrid" class="grd">
+				</div>
 			</div>
+			
 			<div id="settings" class="page">
-				<h3>Settings here</h3>
-			</div>
-		</div>
-	</div>
-	
-	<input type="range" min="1" max="20" value="10" id="partMax">
-	
-	<input id="DBG" type="checkbox">Debug</input>
-	<script src="src/index.js" type="module"></script>
+				<input type="range" min="1" max="20" value="10" id="partMax">
+				<input id="DBG" type="checkbox">Debug</input>
+				<script src="src/index.js" type="module"></script>
 
-	
-	<div id="debugMenu" style="display:none">
-		<div id="cSpellMenu">
-			<button id="cSpellShape" type="button">Create spell</button>
-			<input id="cSpellName" type="text">Spell name</input>
-			<input id="cSpellOut" type="text">Spell shape</input>
+				
+				<div id="debugMenu" style="display:none">
+					<div id="cSpellMenu">
+						<button id="cSpellShape" type="button">Create spell</button>
+						<input id="cSpellName" type="text">Spell name</input>
+						<input id="cSpellOut" type="text">Spell shape</input>
+					</div>
+				</div>
+			</div>
+			
 		</div>
 	</div>
-	
-	
+	<div id="hpBars">
+		<meter id="defaultBar" class="hpBar" min="0" max="100" low="30" optimum="100"  high="80" value="50">
+		</meter>
+		<div id="enemiesBars">
+		</div>
+		<div id="protagBars">
+		</div>
+	</div>
 	
 </body>
 
