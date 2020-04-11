@@ -29,7 +29,6 @@ export class Avatar{
 		this.hpBar.value=this.player.hp;
 
 		this.hpBar.removeAttribute("id");
-		console.log(this.hpBar);
 		document.getElementById(this.hpTeam).appendChild(this.hpBar);
 	}
 	

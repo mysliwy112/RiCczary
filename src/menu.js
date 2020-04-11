@@ -33,8 +33,43 @@ export class Book{
 		if(pageName=="spells"){
 			this.genSpellPage(this.game.mcStats.book);
 		}		
+		if(pageName=="leaderboard"){
+			this.genLeaderboardPage();
+		}			
 		if(document.getElementById("b"+pageName)!=undefined){
 			document.getElementById("b"+pageName).className += " active";
+		}
+	}
+	
+	genLeaderboardPage(){
+		var table=document.getElementById("lead");
+		var base=document.getElementById("tableBase").cloneNode(true);
+		
+		var child = table.lastElementChild; 
+		while (child) { 
+            table.removeChild(child); 
+            child = table.lastElementChild; 
+        } 
+		
+		var leads=[];
+		var i=0;
+		var store=localStorage.key(i);
+		while(store!=null){
+			if(store!="last"&&store!="hiscore"){
+				leads.push([store,localStorage.getItem(store)]);
+			}
+			i++;
+			store=localStorage.key(i);
+		}
+		leads=leads.sort(function(a,b){return b[1] - a[1];});
+		
+		table.appendChild(base);
+		for(i=0;i<leads.length;i++){
+			var entry=base.cloneNode(true);
+			entry.getElementsByClassName("tablePlace")[0].innerHTML=(i+1)+".";
+			entry.getElementsByClassName("tableName")[0].innerHTML=leads[i][0];
+			entry.getElementsByClassName("tableScore")[0].innerHTML=leads[i][1];
+			table.appendChild(entry);
 		}
 	}
 	
@@ -81,19 +116,19 @@ export class Book{
 	}
 	
 	activateGame(){
-		
 		var mcStats={};
 		
 		mcStats.book=SpellBook.basicSpellBook();
 		mcStats.hp=3;
-		mcStats.dmg=1;
+		mcStats.dmg=5;
 		mcStats.def=1;
 		mcStats.effects={};
 		mcStats.name=document.getElementById("charName").value;
+		localStorage.setItem("last",mcStats.name);
 		if(mcStats.name!=""){
 			mcStats.book.name=mcStats.name;
 		}
-		mcStats.img=Character.baseChars()[0];
+		mcStats.img=Character.baseChars().rex;
 		
 		this.game.mcStats=mcStats;
 		

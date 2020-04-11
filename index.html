@@ -170,7 +170,7 @@
 				<!-- <button class="tablinks" id="bmenu" onclick="openPage('menu')">menu</button> -->
 				<button class="tablinks" id="bcharacter" onclick="openPage('character')">character</button>
 				<button class="tablinks" id="bspells" onclick="openPage('spells')">spells</button>
-				<button class="tablinks" id="bsettings" onclick="openPage('settings')">settings</button>
+				<button class="tablinks" id="bsettings" onclick="openPage('leaderboard')">leaderboard</button>
 			</div>
 			
 			<div id="menu" class="page">
@@ -221,19 +221,14 @@
 				</div>
 			</div>
 			
-			<div id="settings" class="page">
-				<input type="range" min="1" max="20" value="10" id="partMax">
-				<input id="DBG" type="checkbox">Debug</input>
-				<script src="src/index.js" type="module"></script>
-
-				
-				<div id="debugMenu" style="display:none">
-					<div id="cSpellMenu">
-						<button id="cSpellShape" type="button">Create spell</button>
-						<input id="cSpellName" type="text">Spell name</input>
-						<input id="cSpellOut" type="text">Spell shape</input>
-					</div>
-				</div>
+			<div id="leaderboard" class="page">
+			<table style="width:100%" id="lead">
+				<tr id="tableBase">
+					<th class="tablePlace">Place</th>
+					<th class="tableName">Name</th>
+					<th class="tableScore">Score</th>
+				</tr>
+			</table>
 			</div>
 			
 		</div>
@@ -246,6 +241,15 @@
 		<div id="protagBars">
 		</div>
 	</div>
+	<input id="DBG" type="checkbox">Debug</input>
+	<div id="debugMenu" style="display:none">
+		<div id="cSpellMenu">
+			<button id="cSpellShape" type="button">Create spell</button>
+			<input id="cSpellName" type="text">Spell name</input>
+			<input id="cSpellOut" type="text">Spell shape</input>
+		</div>
+	</div>
+	<script src="src/index.js" type="module"></script>
 	
 </body>
 

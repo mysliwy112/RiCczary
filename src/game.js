@@ -15,6 +15,7 @@ export default class Game {
 		this.mcStats={};
 		this.enemies=[];
 		this.createEnemies();
+		this.points=0;
 	}
 
 	update(deltaTime){
@@ -30,14 +31,14 @@ export default class Game {
 		this.screen=new Scr.BattleScreen(this.cnv,this.cnvM,this);
 		this.screen.addPlayer(this.mcStats,new Ctr.Mouser(this.cnvM),0);
 		if(AI==1){
-			this.screen.addPlayer(this.mcStats,new Ctr.Ai(),1);
+			this.screen.addPlayer(this.enemies[0][Math.floor(Math.random()*this.enemies[0].length)],new Ctr.Ai(),1);
 			this.points=0;
 			this.stage=1;
 		}else{
 			this.screen.addPlayer(this.mcStats,new Ctr.Net(7892),1);
 			this.stage=0;
 		}
-		this.screen.start(this.stage);
+		this.screen.start();
 	}
 	
 	choose(){
@@ -46,12 +47,59 @@ export default class Game {
 	}
 
 	endGame(){
-		this.startGame=0;
-		this.mainPlayer=null;
-		this.enemyPlayer=null;
-		this.controller=null;
-		this.enemyController=null;
+
 	}
+	
+	won(){
+		if(this.stage>0){
+			this.points+=this.stage;
+			this.stage++;
+			var ctr=new Ctr.Ai();
+			ctr.speed=0.2+this.stage*0.03;
+			var nemy=0;
+			if(this.stage<=5){
+				nemy=0;
+			}else if(this.stage<=10){
+				nemy=1
+			}else if(this.stage<=15){
+				nemy=2;
+			}else{
+				nemy=3;
+			}
+			
+			this.screen.unloadMask();
+			this.screen=new Scr.BattleScreen(this.cnv,this.cnvM,this);
+			this.screen.addPlayer(this.mcStats,new Ctr.Mouser(this.cnvM),0);
+			this.screen.addPlayer(this.enemies[nemy][Math.floor(Math.random()*this.enemies[nemy].length)],ctr,1);
+			this.screen.start();
+			
+		}else{
+			this.choose();
+		}
+	}
+	
+	defeat(){
+		var score=0;
+		var points=localStorage.getItem(this.mcStats.name);
+		if(points==null||points<this.points){
+			localStorage.setItem(this.mcStats.name,this.points);
+			score=1;
+		}
+		
+		var points=localStorage.getItem("hiscore");
+		if(points==null||points<this.points){
+			localStorage.setItem("hiscore",this.points);
+			score=2;
+		}
+		
+		this.screen.unloadMask();
+		this.screen=new Scr.FinishScreen(this.cnv,this.cnvM,this,score,this.points);
+		
+		
+		this.points=0;
+	}
+	
+	
 
 	createEnemies(){
 		this.enemies=[];
@@ -61,7 +109,7 @@ export default class Game {
 			def:1,
 			effects:{},
 			name:"Mumion",
-			img:Character.baseChars()[0]
+			img:Character.baseChars().mum1
 		};
 		mumionV1.book=new SpellBook(
 				mumionV1.name,
@@ -78,7 +126,7 @@ export default class Game {
 			def:1,
 			effects:{},
 			name:"Mumion",
-			img:Character.baseChars()[0]
+			img:Character.baseChars().mum2
 		};
 		mumionV2.effects["muchy"]=1;
 		mumionV2.book=new SpellBook(
@@ -95,7 +143,7 @@ export default class Game {
 			def:1.5,
 			effects:{},
 			name:"Mumion",
-			img:Character.baseChars()[0]
+			img:Character.baseChars().mum3
 		};
 		mumionV3.effects["muchy"]=1;
 		mumionV3.book=new SpellBook(
@@ -114,7 +162,7 @@ export default class Game {
 			def:1,
 			effects:{},
 			name:"Drob",
-			img:Character.baseChars()[0]
+			img:Character.baseChars().drob1
 		};
 		drobV1.book=new SpellBook(
 				drobV1.name,
@@ -130,7 +178,7 @@ export default class Game {
 			def:1,
 			effects:{},
 			name:"Drob",
-			img:Character.baseChars()[0]
+			img:Character.baseChars().drob2
 		};
 		drobV2.book=new SpellBook(
 				drobV2.name,
@@ -148,7 +196,7 @@ export default class Game {
 			def:1,
 			effects:{},
 			name:"Drob",
-			img:Character.baseChars()[0]
+			img:Character.baseChars().drob3
 		};
 		drobV3.book=new SpellBook(
 				drobV3.name,
@@ -168,7 +216,7 @@ export default class Game {
 			def:1.5,
 			effects:{},
 			name:"Faraon",
-			img:Character.baseChars()[0]
+			img:Character.baseChars().mum4
 		};
 		faraon.effects["muchy"]=1;
 		faraon.effects["ciemnosc"]=1;
@@ -186,7 +234,7 @@ export default class Game {
 			def:1,
 			effects:{},
 			name:"TKTPM",
-			img:Character.baseChars()[0]
+			img:Character.baseChars().drob4
 		};
 		TKTPM.book=new SpellBook(
 				TKTPM.name,

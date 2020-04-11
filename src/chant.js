@@ -1,8 +1,6 @@
 import Particle from "./particles.js";
 import V from "/src/Vmath.js";
 
-let partMax=document.getElementById("partMax");
-
 export default class Chant {
 	constructor(transform=null) {
 		this.transform=transform;

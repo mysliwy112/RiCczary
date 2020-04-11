@@ -57,7 +57,7 @@ export class Ai{
 		this.step=0;
 		this.len=0;
 		this.lenMax=150;
-		this.speed=0.5;
+		this.speed=0.2;
 
 		this.posX=0;
 		this.posY=0;

@@ -2,6 +2,9 @@ import Game from "/src/game.js";
 import {SpellBook} from "./spells.js";
 import {Book} from "./menu.js";
 
+document.getElementById("charName").value=localStorage.getItem("last");
+
+
 //visible canvas
 let canvas = document.getElementById("gameScreen");
 let ctx = canvas.getContext("2d");

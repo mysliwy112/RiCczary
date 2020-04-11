@@ -25,10 +25,30 @@ export class Screens{
 export class BattleScreen extends Screens{
 	constructor(cnv,cnvM,game){
 		super(cnv,cnvM,game);
-		this.players=[];
 		this.contr=[];
 		this.teams=[[],[]];
+		
+		var bars=document.getElementById("hpBars").getElementsByClassName("hpBar");
+		
+		for(var bar of bars){
+			if(bar.id!="defaultBar"){
+				bar.parentNode.removeChild(bar);
+			}
+		}
+
 	}
+	
+	unloadMask(){
+		this.maskScreen.unload();
+		var bars=document.getElementById("hpBars").getElementsByClassName("hpBar");
+		
+		for(var bar of bars){
+			if(bar.id!="defaultBar"){
+				bar.parentNode.removeChild(bar);
+			}
+		}
+	}
+	
 	
 	addPlayer(stats,contr,team){
 		var player=new Player(stats);
@@ -56,36 +76,42 @@ export class BattleScreen extends Screens{
 				}
 			}
 		}
-		this.players=this.teams.flat();
 		if(this.mouse!=undefined){
-			this.players.forEach(pl=>pl.avatar.addHitbox(this.maskScreen,this.contr[this.mouse].player));
+			for(var i of this.teams)
+			i.forEach(pl=>pl.avatar.addHitbox(this.maskScreen,this.contr[this.mouse].player));
 		}
 		this.contr.forEach(ctr=>ctr.start());
 	}
 	
 	update(deltaTime){
-		for(var i=this.players.length-1;i>=0;i--){
-			if(this.players[i].hp<=0){
-				this.players.splice(i);
-				console.log(this.teams);
-			}else{
-				this.players[i].update(deltaTime);
+		for(var i=this.teams.length-1;i>=0;i--){
+			for(var j=this.teams[i].length-1;i>=0;i--){
+				this.teams[i][j].update(deltaTime);
+				if(this.teams[i][j].hp<=0){
+					this.teams[i].splice(j);
+					if(this.teams[0].length==0){
+						this.game.defeat();
+					}
+					if(this.teams[1].length==0){
+						this.game.won();
+					}
+				}
 			}
 		}
 		for(var i=this.contr.length-1;i>=0;i--){
+			this.contr[i].update(deltaTime);
 			if(this.contr[i].player.hp<=0){
 				this.contr.splice(i);
-			}else{
-				this.contr[i].update(deltaTime);
 			}
 		}
 	}
 		
 		
 	draw(ctx,ctxM){
-		
-		for(var i=this.players.length-1;i>=0;i--){
-			this.players[i].draw(ctx,ctxM);	
+		for(var i=this.teams.length-1;i>=0;i--){
+			for(var j=this.teams[i].length-1;i>=0;i--){
+				this.teams[i][j].draw(ctx,ctxM);	
+			}
 		}
 		// if(this.mainPlayer.effects["wiry"]>0){
 			// if(this.whril==undefined){
@@ -121,8 +147,8 @@ export class EnemyMenu extends Screens{
 		this.vsPlayer=new Image();
 		this.vsPlayer.src="/assets/vsPlayer.png"
 		this.vsPlayer.onload=function(){
-			that.vsPlayerX=cnv.width/3*2-that.vsAi.width/2;
-			that.vsPlayerY=cnv.height/2-that.vsAi.height/2;
+			that.vsPlayerX=cnv.width/3*2-that.vsPlayer.width/2;
+			that.vsPlayerY=cnv.height/2-that.vsPlayer.height/2;
 			that.loadWait++;
 		};
 	}
@@ -168,5 +194,64 @@ export class EnemyMenu extends Screens{
 
 	playPlayer(){
 		this.game.startgame(0);
+	}
+}
+
+export class FinishScreen extends Screens{
+	constructor(cnv,cnvM,game,score,points){
+		super(cnv,cnvM,game);
+		
+		this.points=points;
+		this.score=score;
+		
+		this.ok=0;
+		var that=this;
+
+		this.restart=new Image();
+		this.restart.src="/assets/restart.png"
+		this.restart.onload=function(){
+			that.restartX=cnv.width/2-that.restart.width/2;
+			that.restartY=cnv.height/3*2-that.restart.height/2;
+			that.ok=1;
+		};
+	}
+
+	update(deltaTime){
+		if(this.ok==1){
+			this.toMenu=this.toMenu.bind(this);
+			this.restartM=this.maskScreen.addObject(this.restart,this.toMenu);
+			this.ok=2;
+		}
+	}
+
+	draw(ctx,ctxM){
+		if(this.score==0){
+			ctx.font = "30px Arial";
+			ctx.fillText("You got: "+this.points, 10, 50);
+		}else if(this.score==1){
+			ctx.font = "30px Arial";
+			ctx.fillText("Good, you got new personal best: "+this.points, 10, 50);
+		}else if(this.score==2){
+			ctx.font = "30px Arial";
+			ctx.fillText("Congratulations, you got new high score: "+this.points, 10, 50);
+		}
+		
+		if(this.ok==2){
+			ctx.drawImage(
+				this.restart,
+				this.restartX,
+				this.restartY
+			);
+
+			ctxM.drawImage(
+				this.restartM,
+				this.restartX,
+				this.restartY
+			);
+		}
+	}
+
+	toMenu(){
+		this.game.choose();
 	}
 }
