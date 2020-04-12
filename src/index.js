@@ -4,6 +4,7 @@ import {Book} from "./menu.js";
 
 document.getElementById("charName").value=localStorage.getItem("last");
 
+window.showCast=function(){};
 
 //visible canvas
 let canvas = document.getElementById("gameScreen");

@@ -129,10 +129,10 @@ export class Avatar{
 		}
 		
 		
-		this.secondUpdate(deltaTime);
+		this.updateSecond(deltaTime);
 	}
 	
-	secondUpdate(){
+	updateSecond(ctx,ctxM){
 		
 	}
 	
@@ -162,9 +162,10 @@ export class Avatar{
 		}
 		
 		this.muchy.muchy.forEach(part => part.draw(ctx));
+		this.drawSecond(ctx,ctxM);
 	}
 	
-
+	drawSecond(ctx,ctxM){}
 
 	hit(attacker){
 		attacker.attack(this.player);
@@ -210,8 +211,7 @@ export class Enemy extends Avatar{
 		return [pointX,pointY];
 	}
 
-	secondUpdate(deltaTime){
-		this.hpBar.value=this.player.hp;
+	updateSecond(deltaTime){
 		this.player.chant.endGravX=this.charImg.rPosX+this.posX;
 		this.player.chant.endGravY=this.charImg.rPosY+this.posY;
 		if(this.time<=0){
@@ -252,4 +252,93 @@ export class Enemy extends Avatar{
 		}
 
 	}
+	
+	drawSecond(ctx,ctxM){}
+}
+
+export class Dummy extends Avatar{
+	constructor(charImg,ctrl,game){
+		super(charImg);
+
+
+		this.game=game;
+		this.ctrl=ctrl;
+		this.dir=1;
+		//avatar position
+		this.posX=100;
+		this.posY=100;
+
+		this.hpTeam="enemiesBars";
+		this.resize=0.7;
+		this.imgBack=new Image();
+		this.imgBack.src="/assets/restart.png"
+
+		this.addButtons();
+	}
+	
+	addHitbox(maskScreen,clicker){
+		
+		var that=this;
+		
+		this.imgBack.onload=function(){
+			that.imgBackM=maskScreen.addObject(that.imgBack,that.back.bind(that));
+		};
+		this.imgM=maskScreen.addObject(this.charImg.img,this.hit.bind(this,clicker));
+	}
+	
+	back(){
+		window.showCast=function(){};
+		this.game.choose();
+	}
+	
+	
+	
+	
+	addButtons(){
+		var spells=document.getElementById("spellsGrid");
+		var that=this;
+		window.showCast=function(){
+			that.ctrl.beginShape(event.target.getElementsByClassName("name")[0].innerHTML);
+		};
+		//for(var spell of spells.children){}
+		
+	}
+
+	//chantSettings(){
+		//this.player.chant.transform=this.enemyScreenTransform;
+		// this.player.chant.partSize=29;
+		// this.player.chant.partPow=6;
+		// this.player.chant.burstPow=1.8;
+		// this.player.chant.partMax=1;	
+	//}
+
+	//enemyScreenTransform(pointX,pointY){
+	//	pointX=(pointX*-1)+400;
+	//	return [pointX,pointY];
+	//}
+
+	updateSecond(deltaTime){
+
+	}
+	
+	drawSecond(ctx,ctxM){
+		ctx.drawImage(
+			this.imgBack,
+			10,
+			515,
+			75,
+			75
+		);
+		
+		if(this.imgBackM!=undefined){
+			ctxM.drawImage(
+				this.imgBackM,
+				10,
+				515,
+				75,
+				75
+			);
+		}
+	}
+	
 }

@@ -36,6 +36,7 @@
 		
 		#charName{
 			width:100%;
+			background-color: #f2c913;
 		}
 		
 		.charButt{
@@ -58,11 +59,11 @@
 		.tab {
 			overflow: hidden;
 			border: 1px solid #ccc;
-			background-color: #f1f1f1;
+			background-color: #c7a43c;
 		}
 
 		.tab button {
-			background-color: inherit;
+			
 			float: left;
 			border: none;
 			outline: none;
@@ -71,18 +72,31 @@
 			transition: 0.3s;
 		}
 		
+		
+		#bcharacter{
+			background-color: #c7863c;
+		}
+		#bspells{
+			background-color: #c7b73c;
+		}
+		#bleaderboard{
+			background-color: #b4c73c;
+		}
+		
+		
 		.tab button:hover {
-			background-color: #ddd;
+			filter: brightness(125%);
 		}
 
 		.tab button.active {
-			background-color: #ccc;
+			filter: brightness(80%);
 		}
 
 		.page {
 			display: none;
 			padding: 6px 12px;
 			border: 1px solid #ccc;
+			background-color: #e6d175;
 			border-top: none;
 		}
 		
@@ -98,7 +112,7 @@
 		.element{
 			border: 1px solid rgba(0, 0, 0, 0.8);
 			background-color: orange;
-			padding: 20px;
+			padding: 10px;
 			/*float:left;*/
 			/*width:120;*/
 			/*height:120;*/
@@ -170,7 +184,7 @@
 				<!-- <button class="tablinks" id="bmenu" onclick="openPage('menu')">menu</button> -->
 				<button class="tablinks" id="bcharacter" onclick="openPage('character')">character</button>
 				<button class="tablinks" id="bspells" onclick="openPage('spells')">spells</button>
-				<button class="tablinks" id="bsettings" onclick="openPage('leaderboard')">leaderboard</button>
+				<button class="tablinks" id="bleaderboard" onclick="openPage('leaderboard')">leaderboard</button>
 			</div>
 			
 			<div id="menu" class="page">
@@ -211,11 +225,12 @@
 			
 			<div id="spells" class="page">
 				<h3 id="casterName">Spells here</h3>
-				<div class="element" id="defaultSpell">
-					<svg width="100" height="75" id="spellShp" class="shape">
+				<div class="element" id="defaultSpell" onclick="showCast()">
+					<p class="name" id="spellName" style="pointer-events: none;">Dud</p>
+					<svg width="100" height="75" id="spellShp" class="shape" style="pointer-events: none;">
 						<polyline cx="0" cy="0" transform="translate(50,37.5) scale(0.3)" style="fill:none;stroke:purple;stroke-width:2;" />
 					</svg>
-					<p class="description" id="spellDesc" >Dud</p>
+					<p class="description" id="spellDesc" style="pointer-events: none;">Dud</p>
 				</div>
 				<div id="spellsGrid" class="grd">
 				</div>
@@ -241,6 +256,7 @@
 		<div id="protagBars">
 		</div>
 	</div>
+	<p id="points" style="font-size:20px"></p>
 	<input id="DBG" type="checkbox">Debug</input>
 	<div id="debugMenu" style="display:none">
 		<div id="cSpellMenu">

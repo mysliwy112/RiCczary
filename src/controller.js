@@ -58,6 +58,9 @@ export class Ai{
 		this.len=0;
 		this.lenMax=150;
 		this.speed=0.15;
+		this.wait=0;
+		this.waitMax=150;
+		this.speed=0.15;
 
 		this.posX=0;
 		this.posY=0;
@@ -71,6 +74,7 @@ export class Ai{
 				this.posX=this.player.avatar.dir*this.dist*(-1)+this.player.avatar.posX;
 				this.posY=this.player.avatar.posY+this.dist;
 				this.player.chant.start(this.posX,this.posY);
+				this.wait=0;
 				this.activ=this.player.spellBook.spells[Math.floor(Math.random() * this.player.spellBook.spells.length)];
 				//this.activ=this.player.spellBook.spells[5];
 				this.work=true;
@@ -91,10 +95,13 @@ export class Ai{
 				this.work=false;
 			}
 			if(this.player.isLoading==2){
-				if(Math.random()<0.90){
-					this.player.attack(this.player.enemies[Math.floor(Math.random()*this.player.enemies.length)]);
-				}else {
-					this.player.endSpell();
+				this.wait+=deltaTime;
+				if(this.wait>=this.waitMax){
+					if(Math.random()<0.96){
+						this.player.attack(this.player.enemies[Math.floor(Math.random()*this.player.enemies.length)]);
+					}else {
+						this.player.endSpell();
+					}
 				}
 			}
 		}
@@ -137,6 +144,63 @@ export class Net{
 				};
 				this.socket.send(JSON.stringify(send_dict));
 			}
+		}
+	}
+}
+
+export class Dummy{
+	constructor(){
+		this.work=false;
+
+		this.dist=100;
+		this.activ=null;
+		this.step=0;
+		this.len=0;
+		this.lenMax=150;
+		this.waitMax=150;
+		this.wait=0;
+		this.speed=0.15;
+		
+		this.guide=1;
+
+		this.posX=0;
+		this.posY=0;
+	}
+	start(){
+
+	}
+	
+	beginShape(spellName){
+		
+		this.step=0;
+		this.player.endSpell();
+		this.posX=400;
+		this.posY=300;
+		this.player.chant.start(this.posX,this.posY);
+		
+		this.activ=this.player.spellBook.spells.find(spell=>spell.name==spellName);
+		
+		console.log(this.player.spellBook.spells);
+		console.log(this.activ);
+		
+		this.work=true;
+		this.wait=0;
+	}
+	
+	
+	update(deltaTime){
+		if(this.work==true){
+			this.posX+=Math.cos(this.activ.seq[this.step]/180*Math.PI)*this.speed*deltaTime;
+			this.posY+=Math.sin(this.activ.seq[this.step]/180*Math.PI)*this.speed*deltaTime;
+			this.len+=this.speed*deltaTime;
+			if(this.len>this.activ.seqL[this.step]*this.lenMax){
+				this.step++;
+				this.len=0;
+			}
+			this.player.chant.move(this.posX,this.posY);
+		}
+		if(this.work==true&&this.step>=this.activ.seq.length){
+			this.work=false;
 		}
 	}
 }

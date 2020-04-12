@@ -57,7 +57,13 @@ export class BattleScreen extends Screens{
 			player.addAvatar(new Av.Avatar(stats.img));
 			this.teams[0].push(player);
 		}else{
-			player.addAvatar(new Av.Enemy(stats.img));
+			if(contr.guide==1){
+				player.hp=10;
+				player.def=10;
+				player.addAvatar(new Av.Dummy(stats.img,contr,this.game));
+			}else{
+				player.addAvatar(new Av.Enemy(stats.img));
+			}
 			this.teams[1].push(player);
 		}
 		contr.player=player;
@@ -231,10 +237,10 @@ export class FinishScreen extends Screens{
 			ctx.fillText("You got: "+this.points, 10, 50);
 		}else if(this.score==1){
 			ctx.font = "30px Arial";
-			ctx.fillText("Good, you got new personal best: "+this.points, 10, 50);
+			ctx.fillText("Good You got new personal best: "+this.points, 10, 50);
 		}else if(this.score==2){
 			ctx.font = "30px Arial";
-			ctx.fillText("Congratulations, you got new high score: "+this.points, 10, 50);
+			ctx.fillText("Congratulations! You got new high score: "+this.points, 10, 50);
 		}
 		
 		if(this.ok==2){

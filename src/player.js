@@ -25,7 +25,7 @@ export default class Player {
 		
 		this.activeSpell=null;
 		this.isLoading=0;
-		this.loadTimeMax=5000;
+		this.loadTimeMax=4000;
 		this.loadTime=0;
 		this.dischargeTimeMax=10000;
 		

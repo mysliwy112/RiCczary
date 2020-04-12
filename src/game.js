@@ -34,7 +34,7 @@ export default class Game {
 			this.points=0;
 			this.stage=1;
 		}else{
-			this.screen.addPlayer(this.mcStats,new Ctr.Net(7892),1);
+			this.screen.addPlayer(this.mcStats,new Ctr.Dummy(),1);
 			this.stage=0;
 		}
 		this.screen.start();
@@ -52,6 +52,7 @@ export default class Game {
 	won(){
 		if(this.stage>0){
 			this.points+=this.stage;
+			document.getElementById("points").innerHTML="Points: "+this.points;
 			this.stage++;
 			var ctr=new Ctr.Ai();
 			ctr.speed=0.15+this.stage*0.02;
@@ -79,6 +80,7 @@ export default class Game {
 	
 	defeat(){
 		var score=0;
+		document.getElementById("points").innerHTML="";
 		var points=localStorage.getItem(this.mcStats.name);
 		if(points==null||points<this.points){
 			localStorage.setItem(this.mcStats.name,this.points);

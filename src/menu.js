@@ -95,7 +95,8 @@ export class Book{
 				point.y=i[1];
 				write.children.namedItem("spellShp").children.item(0).points.appendItem(point);
 			}
-			
+			write.children.namedItem("spellName").innerHTML=spell.name;
+			write.children.namedItem("spellName").removeAttribute("id");
 			write.children.namedItem("spellShp").removeAttribute("id");
 			write.children.namedItem("spellDesc").innerHTML=spell.description;
 			write.children.namedItem("spellDesc").removeAttribute("id");
