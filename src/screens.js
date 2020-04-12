@@ -2,6 +2,7 @@ import Chant from "./chant.js";
 import * as Av from "./avatar.js";
 import MaskScreen from "/src/maskScreen.js";
 import Player from "./player.js";
+import * as Ef from "./effects.js";
 
 export class Screens{
 	constructor(cnv,cnvM,game){
@@ -100,9 +101,9 @@ export class BattleScreen extends Screens{
 		}
 		for(var i=this.contr.length-1;i>=0;i--){
 			this.contr[i].update(deltaTime);
-			if(this.contr[i].player.hp<=0){
-				this.contr.splice(i);
-			}
+			//if(this.contr[i].player.hp<=0){
+			//	this.contr.splice(i);
+			//}
 		}
 	}
 		
@@ -113,19 +114,19 @@ export class BattleScreen extends Screens{
 				this.teams[i][j].draw(ctx,ctxM);	
 			}
 		}
-		// if(this.mainPlayer.effects["wiry"]>0){
-			// if(this.whril==undefined){
-				// this.whril=new Ef.Whril();
-			// }else{
-				// this.whril.move(ctx,this.mainPlayer.effects["wiry"]);
-			// }
-		// }else{
-			// if(this.whril!=undefined){
-				// if(this.whril.finish(ctx)==1){
-					// this.whril=undefined;
-				// }
-			// }
-		// }
+		if(this.contr[this.mouse].player.effects["wiry"]>0){
+			if(this.whril==undefined){
+				this.whril=new Ef.Whril();
+			}else{
+				this.whril.move(ctx,this.contr[this.mouse].player.effects["wiry"]);
+			}
+		}else{
+			if(this.whril!=undefined){
+				if(this.whril.finish(ctx)==1){
+					this.whril=undefined;
+				}
+			}
+		}
 	}
 }
 

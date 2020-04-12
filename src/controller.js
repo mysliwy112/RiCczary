@@ -57,7 +57,7 @@ export class Ai{
 		this.step=0;
 		this.len=0;
 		this.lenMax=150;
-		this.speed=0.2;
+		this.speed=0.15;
 
 		this.posX=0;
 		this.posY=0;
@@ -66,34 +66,36 @@ export class Ai{
 
 	}
 	update(deltaTime){
-		if(this.player.isLoading==0&&this.work==false){
-			this.posX=this.player.avatar.dir*this.dist*(-1)+this.player.avatar.posX;
-			this.posY=this.player.avatar.posY+this.dist;
-			this.player.chant.start(this.posX,this.posY);
-			this.activ=this.player.spellBook.spells[Math.floor(Math.random() * this.player.spellBook.spells.length)];
-			//this.activ=this.player.spellBook.spells[5];
-			this.work=true;
-		}
-		if(this.work==true){
-			this.posX+=Math.cos(this.activ.seq[this.step]/180*Math.PI)*this.speed*deltaTime;
-			this.posY+=Math.sin(this.activ.seq[this.step]/180*Math.PI)*this.speed*deltaTime;
-			this.len+=this.speed*deltaTime;
-			if(this.len>this.activ.seqL[this.step]*this.lenMax){
-				this.step++;
-				this.len=0;
+		if(this.player.hp>0){
+			if(this.player.isLoading==0&&this.work==false){
+				this.posX=this.player.avatar.dir*this.dist*(-1)+this.player.avatar.posX;
+				this.posY=this.player.avatar.posY+this.dist;
+				this.player.chant.start(this.posX,this.posY);
+				this.activ=this.player.spellBook.spells[Math.floor(Math.random() * this.player.spellBook.spells.length)];
+				//this.activ=this.player.spellBook.spells[5];
+				this.work=true;
 			}
-			this.player.chant.move(this.posX,this.posY);
-		}
-		if(this.step>=this.activ.seq.length){
-			this.step=0;
-			this.player.chant.finish();
-			this.work=false;
-		}
-		if(this.player.isLoading==2){
-			if(Math.random()<0.90){
-				this.player.attack(this.player.enemies[Math.floor(Math.random()*this.player.enemies.length)]);
-			}else {
-				this.player.endSpell();
+			if(this.work==true){
+				this.posX+=Math.cos(this.activ.seq[this.step]/180*Math.PI)*this.speed*deltaTime;
+				this.posY+=Math.sin(this.activ.seq[this.step]/180*Math.PI)*this.speed*deltaTime;
+				this.len+=this.speed*deltaTime;
+				if(this.len>this.activ.seqL[this.step]*this.lenMax){
+					this.step++;
+					this.len=0;
+				}
+				this.player.chant.move(this.posX,this.posY);
+			}
+			if(this.step>=this.activ.seq.length){
+				this.step=0;
+				this.player.chant.finish();
+				this.work=false;
+			}
+			if(this.player.isLoading==2){
+				if(Math.random()<0.90){
+					this.player.attack(this.player.enemies[Math.floor(Math.random()*this.player.enemies.length)]);
+				}else {
+					this.player.endSpell();
+				}
 			}
 		}
 	}

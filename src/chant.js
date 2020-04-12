@@ -50,6 +50,8 @@ export default class Chant {
 		
 		//states
 		this.burstDone=0;
+		this.img=new Image();
+		this.img.src="/assets/mag5.png";
 	}
 	
 	setPlayer(player){
@@ -73,7 +75,7 @@ export default class Chant {
 		var i=this.freqPart
 		for(var i=this.freqPart;i<len;i+=this.freqPart){
 			for(var j=0;j<this.partMax;j++){
-				this.particleSystem.push(new Particle(this.posX+vX*i/len,this.posY+vY*i/len,this.partSize,this.partPow));
+				this.particleSystem.push(new Particle(this.posX+vX*i/len,this.posY+vY*i/len,this.partSize,this.partPow,this.img));
 			}
 		}
 		if(len>this.freqPart){
@@ -268,15 +270,15 @@ export default class Chant {
 			if(this.burstDone==0){
 				this.particleSystem.forEach(part =>{
 					part.time=part.timeMax+111;
-					part.gravitX=this.endGravX;
-					part.gravitY=this.endGravY;
+					part.gravityX=this.endGravX;
+					part.gravityY=this.endGravY;
 					part.loss=0.98;
 				});
 				this.burstDone=1;
 			}else{
 				this.particleSystem.forEach(part =>{
-					part.gravitX=this.endGravX;
-					part.gravitY=this.endGravY;
+					part.gravityX=this.endGravX;
+					part.gravityY=this.endGravY;
 				});
 			}
 		}else{

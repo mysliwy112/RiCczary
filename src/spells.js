@@ -59,9 +59,9 @@ export class SpellBook{
 		var book = new SpellBook(
 			name,
 			[
-				new Spell("Sleep",[-90,45,-45,90],[1,1,1,1],["sen"],1, "Makes enemy sleep."),
+				new Spell("Sleep",[-90,45,-45,90],[1,1,1,1],["sen"],1, "Breaks enemy spell."),
 				new Spell("Pudding",[180,90,0,90,180],[1,1,1,1,1],["budyn"],1,"Covers object in pudding."),
-				new Spell("Frog",[90,0,-90,180,45,135],[1,1,1,1,1,1],["zaba"],1, "Changes being into frog."),
+				//new Spell("Frog",[90,0,-90,180,45,135],[1,1,1,1,1,1],["zaba"],1, "Changes being into frog."),
 				new Spell("Darkness",[0,-135,-45,180],[1,1,1,1],["ciemnosc"],1,"Spreads darkness."),
 				new Spell("Flies",[90,-135,0,-135],[2,1,2,1],["muchy"],1,"Flies everywhere."),
 				new Spell("Vortexes",[-90,45,-90,135,0],[1,2,1,2,1],["wiry"],1,"Makes everything dizzy."),

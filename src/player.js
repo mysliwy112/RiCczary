@@ -19,7 +19,7 @@ export default class Player {
 		this.dmg=stats.dmg;
 		this.def=stats.def;
 		
-		this.effects=stats.effects;
+		this.effects={...stats.effects};
 		
 		this.spellBook=stats.book;
 		
@@ -77,13 +77,19 @@ export default class Player {
 	
 	//when this character gets hit
 	hit(magic){
-		console.log("this");
+		console.log(magic.effects);
 		for (var effect of magic.effects){
 			switch (effect){
 				case "sen":
 					this.endSpell();
 				break;
 				case "clear":
+					var keys = Object.keys(this.effects);
+					if(keys.length>0){
+						this.effects[keys[ Math.floor(keys.length * Math.random())]]--;
+					}
+				break;
+				case "clearOMG":
 					this.effects={};
 				break;
 				case "budyn":
@@ -93,6 +99,9 @@ export default class Player {
 					this.addEffect(effect);
 				break;
 				case "wiry":
+					this.addEffect(effect);
+				break;
+				case "muchy":
 					this.addEffect(effect);
 				break;
 				default:

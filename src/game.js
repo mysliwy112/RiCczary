@@ -3,7 +3,6 @@ import * as Ctr from "./controller.js";
 import * as Scr from "./screens.js";
 import MaskScreen from "/src/maskScreen.js";
 import * as Av from "./avatar.js";
-import * as Ef from "./effects.js";
 import Character from "/src/chars.js";
 import {SpellBook,Spell} from "./spells.js";
 
@@ -55,7 +54,7 @@ export default class Game {
 			this.points+=this.stage;
 			this.stage++;
 			var ctr=new Ctr.Ai();
-			ctr.speed=0.2+this.stage*0.03;
+			ctr.speed=0.15+this.stage*0.02;
 			var nemy=0;
 			if(this.stage<=5){
 				nemy=0;

@@ -119,8 +119,8 @@ export class Book{
 		var mcStats={};
 		
 		mcStats.book=SpellBook.basicSpellBook();
-		mcStats.hp=3;
-		mcStats.dmg=5;
+		mcStats.hp=5;
+		mcStats.dmg=1;
 		mcStats.def=1;
 		mcStats.effects={};
 		mcStats.name=document.getElementById("charName").value;

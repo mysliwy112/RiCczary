@@ -1,5 +1,6 @@
 import V from "/src/Vmath.js";
 import Character from "/src/chars.js";
+import Particle from "./particles.js";
 
 let chmura=new Image();
 chmura.src="/assets/ciemnosc.png";
@@ -14,6 +15,31 @@ export class Avatar{
 		this.posY=this.charImg.posY;
 		
 		this.hpTeam="protagBars";
+		
+		this.resize=1;
+		
+		this.muchy={
+			muchy:[],
+			size:50,
+			ile:5
+		}
+		this.muchy.img=new Image();
+		this.muchy.img.src="/assets/mucha.png";
+		
+		this.ciemnosc={
+			size:330
+		}
+		this.ciemnosc.img=new Image();
+		this.ciemnosc.img.src="/assets/ciemnosc.png";
+		
+		
+		this.budyn={
+			budyn:[],
+			size:200,
+			ile:10
+		}
+		this.budyn.img=new Image();
+		this.budyn.img.src="/assets/budyn.png";
 		
 	}
 	addBar(){
@@ -56,7 +82,60 @@ export class Avatar{
 	
 	update(deltaTime){
 		this.hpBar.value=this.player.hp;
+		if(this.player.effects.muchy>0){
+			this.muchy.muchy=this.muchy.muchy.slice(0,this.muchy.ile*this.player.effects.muchy);
+			for(var i=0;i<this.muchy.ile*this.player.effects.muchy;i++){
+				if(i>=this.muchy.muchy.length){
+					this.muchy.muchy.push(new Particle(this.posX+100,this.posY+100,this.resize*this.muchy.size,8,this.muchy.img,"much"));
+				}
+				this.muchy.muchy[i].gravityX=this.posX+100*this.dir;
+				this.muchy.muchy[i].gravityY=this.posY+100;
+				this.muchy.muchy[i].update(deltaTime);
+			}
+		}else{
+			this.muchy.muchy=[];
+		}
+		
+		if(this.player.effects.ciemnosc>0){
+			if(this.ciemnosc.ciemnosc==undefined){
+				this.ciemnosc.ciemnosc=new Particle(this.posX+20,this.posY+150,this.resize*this.ciemnosc.size,8,this.ciemnosc.img,"ciemnosc");
+			}
+			this.ciemnosc.ciemnosc.imgSize=this.ciemnosc.size*this.resize*this.player.effects.ciemnosc;
+			this.ciemnosc.ciemnosc.gravityX=this.posX+200*this.dir;
+			this.ciemnosc.ciemnosc.gravityY=this.posY+150;
+			this.ciemnosc.ciemnosc.update(deltaTime);
+		}else{
+			this.ciemnosc.ciemnosc==undefined;
+		}
+		
+		if(this.player.effects.budyn>0){
+			this.budyn.budyn=this.budyn.budyn.slice(0,this.budyn.ile*this.player.effects.budyn);
+			for(var i=0;i<this.budyn.ile*this.player.effects.budyn;i++){
+				if(i>=this.budyn.budyn.length){
+					var offX=Math.random()*400;
+					var offY=Math.random()*400;
+					this.budyn.budyn.push(new Particle(this.posX+offX,this.posY+offY,this.resize*this.budyn.size,8,this.budyn.img,"budyn"));
+					this.budyn.budyn[this.budyn.budyn.length-1].offX=offX;
+					this.budyn.budyn[this.budyn.budyn.length-1].offY=offY;
+					this.budyn.budyn[this.budyn.budyn.length-1].imgSize=Math.random()*this.budyn.size;
+					this.budyn.budyn[this.budyn.budyn.length-1].imgSize2=Math.random()*this.budyn.size;
+				}
+				this.budyn.budyn[i].gravityX=this.posX;
+				this.budyn.budyn[i].gravityY=this.posY;
+				this.budyn.budyn[i].update(deltaTime);
+			}
+		}else{
+			this.budyn.budyn=[];
+		}
+		
+		
+		this.secondUpdate(deltaTime);
 	}
+	
+	secondUpdate(){
+		
+	}
+	
 	
 	draw(ctx,ctxM){
 		ctx.drawImage(
@@ -65,13 +144,7 @@ export class Avatar{
 			this.posY
 		);
 		
-		if(this.player.effects["ciemnosc"]>0){
-			ctx.drawImage(
-				chmura,
-				this.posX+50,
-				this.posY+50
-			);
-		}
+
 		
 		if(this.imgM!=undefined){
 			ctxM.drawImage(
@@ -80,6 +153,15 @@ export class Avatar{
 				this.posY
 			);
 		}
+		
+		this.budyn.budyn.forEach(part => part.draw(ctx));
+		
+		
+		if(this.ciemnosc.ciemnosc!=undefined){
+			this.ciemnosc.ciemnosc.draw(ctx);
+		}
+		
+		this.muchy.muchy.forEach(part => part.draw(ctx));
 	}
 	
 
@@ -107,6 +189,7 @@ export class Enemy extends Avatar{
 		//movement speed
 		this.speed=0.1;
 		this.hpTeam="enemiesBars";
+		this.resize=0.7;
 
 	}
 	
@@ -127,7 +210,7 @@ export class Enemy extends Avatar{
 		return [pointX,pointY];
 	}
 
-	update(deltaTime){
+	secondUpdate(deltaTime){
 		this.hpBar.value=this.player.hp;
 		this.player.chant.endGravX=this.charImg.rPosX+this.posX;
 		this.player.chant.endGravY=this.charImg.rPosY+this.posY;
@@ -158,8 +241,13 @@ export class Enemy extends Avatar{
 			var a=V.normalize((this.gravityX-this.velX),(this.gravityY-this.velY));
 			this.velX+=a[0];
 			this.velY+=a[1];
-			this.posX+=this.velX*this.speed*deltaTime;
-			this.posY+=this.velY*this.speed*deltaTime;
+			if(this.player.effects.budyn!=undefined){
+				this.posX+=this.velX*this.speed*deltaTime/this.player.effects.budyn;
+				this.posY+=this.velY*this.speed*deltaTime/this.player.effects.budyn;
+			}else{
+				this.posX+=this.velX*this.speed*deltaTime;
+				this.posY+=this.velY*this.speed*deltaTime;
+			}
 			this.time-=deltaTime;
 		}
 
