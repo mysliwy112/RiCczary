@@ -34,7 +34,7 @@ export default class Game {
 			this.points=0;
 			this.stage=1;
 		}else{
-			this.screen.addPlayer(this.mcStats,new Ctr.Dummy(),1);
+			this.screen.addPlayer(this.dummyStats,new Ctr.Dummy(),1);
 			this.stage=0;
 		}
 		this.screen.start();

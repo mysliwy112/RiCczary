@@ -12,6 +12,7 @@ export default class Character{
 		var characters={}
 		characters.rex=new Character("/assets/rex.png",500,100,6,210);
 		characters.drob1=new Character("/assets/drob1.png",600,2,36,122);
+		characters.dummy=new Character("/assets/drobd.png",600,2,36,122);
 		characters.drob2=new Character("/assets/drob2.png",600,2,36,122);
 		characters.drob3=new Character("/assets/drob3.png",600,2,36,122);
 		characters.drob4=new Character("/assets/drob4.png",600,2,36,122);

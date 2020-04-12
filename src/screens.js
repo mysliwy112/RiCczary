@@ -58,8 +58,6 @@ export class BattleScreen extends Screens{
 			this.teams[0].push(player);
 		}else{
 			if(contr.guide==1){
-				player.hp=10;
-				player.def=10;
 				player.addAvatar(new Av.Dummy(stats.img,contr,this.game));
 			}else{
 				player.addAvatar(new Av.Enemy(stats.img));

@@ -132,6 +132,11 @@ export class Book{
 		mcStats.img=Character.baseChars().rex;
 		
 		this.game.mcStats=mcStats;
+		var dummyStats={...mcStats};
+		dummyStats.img=Character.baseChars().dummy;		
+		dummyStats.hp=10;
+		dummyStats.def=10;
+		this.game.dummyStats=dummyStats;
 		
 		window.openPage("spells");
 		this.game.choose();

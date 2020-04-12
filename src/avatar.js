@@ -35,7 +35,7 @@ export class Avatar{
 		
 		this.budyn={
 			budyn:[],
-			size:200,
+			size:150,
 			ile:10
 		}
 		this.budyn.img=new Image();
