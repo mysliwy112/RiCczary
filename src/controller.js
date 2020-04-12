@@ -20,27 +20,7 @@ export class Mouser{
 			}
 		});
 		
-		this.canvas.addEventListener("touchmove", event =>{
-			if(this.work==true){
-				if(this.toActivate==true){
-					this.toActivate=false;
-					this.player.endSpell();
-					this.player.chant.start(event.offsetX,event.offsetY);
-				}
-				this.player.chant.move(event.offsetX,event.offsetY);
-			}
-		});
-		
 		this.canvas.addEventListener("mousedown", event =>{
-			if(this.player.activeSpell==null){
-				this.player.chant.start(event.offsetX,event.offsetY);
-			}else{
-				this.toActivate=true;	
-			}
-			this.work=true;
-		});
-		
-		this.canvas.addEventListener("touchstart", event =>{
 			if(this.player.activeSpell==null){
 				this.player.chant.start(event.offsetX,event.offsetY);
 			}else{
@@ -54,25 +34,12 @@ export class Mouser{
 			this.player.chant.finish();
 			this.work=false;
 		});
-		
-		this.canvas.addEventListener("touchend", event =>{
-			this.player.chant.finish();
-			this.work=false;
-		});
-		
-		
-		
+
 		this.canvas.addEventListener("mouseleave", event =>{
 			this.player.chant.reset();
 			this.work=false;
 		});
-		
-		this.canvas.addEventListener("touchcancel", event =>{
-			this.player.chant.reset();
-			this.work=false;
-		});
-		
-		
+
 		document.getElementById("cSpellShape").addEventListener("click", event =>{
 			this.player.chant.reset();
 			this.player.chant.creationMode=true;
