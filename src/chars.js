@@ -10,11 +10,11 @@ export default class Character{
 	}
 	static baseChars(){
 		var characters={}
-		characters.rex=new Character("/assets/rex.png",600,100,6,210);
-		characters.drob1=new Character("/assets/drob.png",600,2,36,122);
-		characters.drob2=new Character("/assets/drob.png",600,2,36,122);
-		characters.drob3=new Character("/assets/drob.png",600,2,36,122);
-		characters.drob4=new Character("/assets/drob.png",600,2,36,122);
+		characters.rex=new Character("/assets/rex.png",500,100,6,210);
+		characters.drob1=new Character("/assets/drob1.png",600,2,36,122);
+		characters.drob2=new Character("/assets/drob2.png",600,2,36,122);
+		characters.drob3=new Character("/assets/drob3.png",600,2,36,122);
+		characters.drob4=new Character("/assets/drob4.png",600,2,36,122);
 		characters.mum1=new Character("/assets/Smumion1.png",400,296,148,-40);
 		characters.mum2=new Character("/assets/Smumion2.png",400,296,148,-40);
 		characters.mum3=new Character("/assets/Smumion3.png",400,296,148,-40);

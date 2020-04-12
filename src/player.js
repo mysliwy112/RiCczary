@@ -34,6 +34,7 @@ export default class Player {
 		this.allies=[];
 		this.enemies=[];
 		
+		this.fade=-1;
 		
 	}
 	addChant(chant){

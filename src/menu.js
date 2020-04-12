@@ -109,7 +109,7 @@ export class Book{
 	
 	
 	setCharImg(){
-		document.getElementById("charImage").src=this.chars[this.nowChar].img.src;
+		//document.getElementById("charImage").src=this.chars[this.nowChar].img.src;
 	}
 	
 	newGame(){

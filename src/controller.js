@@ -174,7 +174,7 @@ export class Dummy{
 		
 		this.step=0;
 		this.player.endSpell();
-		this.posX=400;
+		this.posX=370;
 		this.posY=300;
 		this.player.chant.start(this.posX,this.posY);
 		

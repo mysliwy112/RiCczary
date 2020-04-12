@@ -203,7 +203,8 @@ export class Enemy extends Avatar{
 		this.player.chant.partSize=29;
 		this.player.chant.partPow=6;
 		this.player.chant.burstPow=1.8;
-		this.player.chant.partMax=1;	
+		this.player.chant.partMax=1;
+		this.player.chant.img.src="/assets/magdd.png";
 	}
 
 	enemyScreenTransform(pointX,pointY){
@@ -274,6 +275,7 @@ export class Dummy extends Avatar{
 		this.imgBack.src="/assets/restart.png"
 
 		this.addButtons();
+		document.getElementById("points").innerHTML="Click on spell from spells bookmark to see how it is drawed."
 	}
 	
 	addHitbox(maskScreen,clicker){
@@ -287,6 +289,7 @@ export class Dummy extends Avatar{
 	}
 	
 	back(){
+		document.getElementById("points").innerHTML="";
 		window.showCast=function(){};
 		this.game.choose();
 	}
@@ -299,23 +302,8 @@ export class Dummy extends Avatar{
 		var that=this;
 		window.showCast=function(){
 			that.ctrl.beginShape(event.target.getElementsByClassName("name")[0].innerHTML);
-		};
-		//for(var spell of spells.children){}
-		
+		};	
 	}
-
-	//chantSettings(){
-		//this.player.chant.transform=this.enemyScreenTransform;
-		// this.player.chant.partSize=29;
-		// this.player.chant.partPow=6;
-		// this.player.chant.burstPow=1.8;
-		// this.player.chant.partMax=1;	
-	//}
-
-	//enemyScreenTransform(pointX,pointY){
-	//	pointX=(pointX*-1)+400;
-	//	return [pointX,pointY];
-	//}
 
 	updateSecond(deltaTime){
 

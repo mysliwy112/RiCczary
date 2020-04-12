@@ -98,10 +98,12 @@
 			border: 1px solid #ccc;
 			background-color: #e6d175;
 			border-top: none;
+			height:550px;
 		}
 		
 		#book{
 			overflow: hidden;
+			
 		}
 		
 		.grd{
@@ -170,6 +172,10 @@
 			border-radius: 3px;
 		}
 		
+		.mainButton{
+			background-color: #db34eb;
+		}
+		
 	</style>
 </head>
 	
@@ -213,12 +219,12 @@
 			
 			<div id="character" class="page">
 				<div id="charChoose">
-					<button class="charButt" id="leftButt" onclick="clicked()">&lt;</button>
+					<!-- <button class="charButt" id="leftButt" onclick="clicked()">&lt;</button> -->
 					<div id="char">
 						<input id="charName" placeholder="Name"></input>
-						<img id="charImage" src="/assets/rex.png">
+						<img id="charImage" src="/assets/rexbase.png">
 					</div>
-					<button class="charButt" id="rightButt">&gt;</button>
+					<!-- <button class="charButt" id="rightButt">&gt;</button> -->
 				</div>
 				<button class="mainButton" onclick="activateGame()">OK</button>
 			</div>
@@ -264,6 +270,11 @@
 			<input id="cSpellName" type="text">Spell name</input>
 			<input id="cSpellOut" type="text">Spell shape</input>
 		</div>
+	</div>
+	<div id="Instruction" style="float:right; width:30%">
+		<h3>Instruction</h3>
+		<p>You can draw spell by holding left mouse button and moving cursor around the screen.
+		Spell tracing is finished when you release mouse button. To cast the spell, you have to wait until it's charged then click on enemy.</p>
 	</div>
 	<script src="src/index.js" type="module"></script>
 	

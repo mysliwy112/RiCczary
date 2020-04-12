@@ -93,15 +93,24 @@ export class BattleScreen extends Screens{
 	update(deltaTime){
 		for(var i=this.teams.length-1;i>=0;i--){
 			for(var j=this.teams[i].length-1;i>=0;i--){
-				this.teams[i][j].update(deltaTime);
 				if(this.teams[i][j].hp<=0){
-					this.teams[i].splice(j);
+					if(this.teams[i][j].fade==-1){
+						this.teams[i][j].update(deltaTime);
+						this.teams[i][j].fade=255;
+					}
+					this.teams[i][j].fade-=deltaTime*0.3;
+					
+					if(this.teams[i][j].fade<=0){
+						this.teams[i].splice(j);
+					}
 					if(this.teams[0].length==0){
 						this.game.defeat();
 					}
 					if(this.teams[1].length==0){
 						this.game.won();
 					}
+				}else{
+					this.teams[i][j].update(deltaTime);		
 				}
 			}
 		}
@@ -117,9 +126,13 @@ export class BattleScreen extends Screens{
 	draw(ctx,ctxM){
 		for(var i=this.teams.length-1;i>=0;i--){
 			for(var j=this.teams[i].length-1;i>=0;i--){
-				this.teams[i][j].draw(ctx,ctxM);	
+				if(this.teams[i][j].fade!=-1)
+					ctx.globalAlpha=this.teams[i][j].fade/255;
+				this.teams[i][j].draw(ctx,ctxM);
+				ctx.globalAlpha=1;
 			}
 		}
+		
 		if(this.contr[this.mouse].player.effects["wiry"]>0){
 			if(this.whril==undefined){
 				this.whril=new Ef.Whril();
